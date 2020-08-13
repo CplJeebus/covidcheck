@@ -48,7 +48,7 @@ Simple app to track various covid-19 stats
 555	DE	09/08/2020
 ```
 
-### Get deaths the previous _n_ days  
+### Get deaths in the previous _n_ days  
 
 
 `check-ecdc.sh d [Number of Days] [Country 1] [Country 2] [Country.....` 
@@ -68,8 +68,17 @@ Simple app to track various covid-19 stats
 1	DE	09/08/2020
 ```
 
+## Notes 
 
+### Where does the data come from. 
 
+[Here](https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide) basically it is the daily update from the European Centre for Disease Prevention and Control.
+
+### Some strangness in the data 
+
+* For some reason some of the data points are weird for instance negative numbers 
+* The Country code are reasonably consistent with [ISO 3166](https://www.iban.com/country-codes) however there are some funnies for example `UK` rather than `GB`.
+`
 
 
 
