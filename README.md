@@ -1,1 +1,1 @@
-# covidchekc
+# covidcheck
