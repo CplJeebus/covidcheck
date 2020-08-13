@@ -12,7 +12,8 @@ Simple app to track various covid-19 stats
 
 
 `check-ecdc.sh [Number of Days] [Country 1] [Country 2] [Country.....` 
-`check-ecdc.sh 5 IE DE` 
+
+`./check-ecdc.sh 5 IE DE` 
 
 ```
 18.27	IE	13/08/2020
@@ -31,7 +32,8 @@ Simple app to track various covid-19 stats
 
 
 `check-ecdc.sh n [Number of Days] [Country 1] [Country 2] [Country.....` 
-`check-ecdc.sh n 5 IE DE` 
+
+`./check-ecdc.sh n 5 IE DE` 
 
 ```
 37	IE	13/08/2020
@@ -50,7 +52,8 @@ Simple app to track various covid-19 stats
 
 
 `check-ecdc.sh d [Number of Days] [Country 1] [Country 2] [Country.....` 
-`check-ecdc.sh d 5 IE DE` 
+
+`./check-ecdc.sh d 5 IE DE` 
 
 ```
 1	IE	13/08/2020
