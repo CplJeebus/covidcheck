@@ -20,7 +20,7 @@ TODAYF=$(ls -lt today.json | awk '{print $6,$7}')
 log(){
     if [[ ${DEBUG} == "TRUE" ]]
     then
-        echo $@ | od -a
+        echo $@
     fi
 }
 
@@ -65,10 +65,10 @@ main(){
 checkfile
 
 case $1 in
-    f|F)
+    f*|F*)
         getupdate
         ;;
-    d|D)
+    d*|D*)
         export NUM=$2
         shift
         for C in $*
@@ -76,7 +76,7 @@ case $1 in
             deaths $C
         done
         ;;
-    n|N)
+    n*|N*)
         export NUM=$2
         shift
         for C in $*
@@ -89,7 +89,7 @@ case $1 in
         shift
         for C in $*
         do
-        cases $C
+            cases $C
         done
         ;;
 esac
