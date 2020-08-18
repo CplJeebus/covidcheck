@@ -81,5 +81,24 @@ Simple app to track various covid-19 stats
 `
 
 
+# Todo
+
+### Shell Script
+Probably won't do much more but;
+  * A `usage` function would be nice
+  * Better arg handling
+  * Prereq check for things like `jq`
+
+### Go Version
+Where to start! Here I suppose;
+  * Get functionality parity to the shell script *prioity 1*
+  * Refactor to get modules working properly and figure out my hinky `$GOPATH` issues.
+  * Refactor some more for the sake of it
+  * Report usage.
+  * Better arg handling logic, especially aroud required args and defaults and stuff.
+  * Arg validation for Country codes, I actually like the silent fail but a simple `toupper` would be cool
+  * Output validation. This might require some research to find the background, but app should filter nonsensical output. _"-48" deaths UK._ I think we have a bigger problem than covid!
+  * Nicer formatting tabulating via date for instance.
+  * lots more stuff!!
 
 
