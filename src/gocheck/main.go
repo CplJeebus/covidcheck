@@ -35,15 +35,16 @@ func main() {
 	refresh := flag.Bool("f", false, "get updated file")
 	flag.Parse()
 
-	var countries []string
-	countries = flag.Args()
+	var countries = flag.Args()
 
-	if *refresh == true {
+	if *refresh {
 		getdata()
 	}
 
 	var theRecords ecdcdata
+
 	fbytes, e := ioutil.ReadFile("./today-go.json")
+
 	if e != nil {
 		fmt.Printf("%s", e)
 	}
@@ -52,7 +53,9 @@ func main() {
 	if e != nil {
 		fmt.Printf("%s", e)
 	}
+
 	var j int
+
 	if len(countries) != 0 {
 		for p := range countries {
 			j = 0
@@ -63,8 +66,9 @@ func main() {
 						if e != nil {
 							fmt.Printf("%s", e)
 						}
+
 						fmt.Printf("%.2f\t%s\t%s\n", cases, theRecords.Records[i].GeoID, theRecords.Records[i].DateRep)
-						j += 1
+						j++
 					}
 				}
 			}
@@ -80,12 +84,15 @@ func checkfile() {
 }
 
 func getdata() {
-	dataUrl := "https://opendata.ecdc.europa.eu/covid19/casedistribution/json/"
-	resp, err := http.Get(dataUrl)
+	dataURL := "https://opendata.ecdc.europa.eu/covid19/casedistribution/json/"
+	resp, err := http.Get(dataURL)
+
 	if err != nil {
 		fmt.Printf("%s", err)
 	}
+
 	fmt.Println("Getting latest file")
+
 	defer resp.Body.Close()
 
 	out, err := os.Create("./today-go.json")
@@ -95,5 +102,4 @@ func getdata() {
 	defer out.Close()
 
 	_, err = io.Copy(out, resp.Body)
-
 }
