@@ -107,7 +107,7 @@ Where to start! Here I suppose;
   * Get functionality parity to the shell script *prioity 1* - **DONE**
   * Refactor to get modules working properly and figure out my hinky `$GOPATH` issues. **DONE** _Note:_ My vim config still insist my GOPATH is wrong!
   * Refactor some more for the sake of it **DONE**
-  * Report usage.
+  * Report usage and make interface better the flags are confusing
   * Better arg handling logic, especially aroud required args and defaults and stuff.
   * Arg validation for Country codes, I actually like the silent fail but a simple `toupper` would be cool
   * Output validation. This might require some research to find the background, but app should filter nonsensical output. _"-48" deaths UK._ I think we have a bigger problem than covid!
