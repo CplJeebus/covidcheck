@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gocheck/types"
 	"strconv"
+	"strings"
 )
 
 func Get14dayaverage(number int, countries []string, theRecords types.Ecdcdata) {
@@ -14,7 +15,7 @@ func Get14dayaverage(number int, countries []string, theRecords types.Ecdcdata) 
 			j = 0
 			for i := range theRecords.Records {
 				if j < number {
-					if theRecords.Records[i].GeoID == countries[p] {
+					if theRecords.Records[i].GeoID == strings.ToUpper(countries[p]) {
 						cases, e := strconv.ParseFloat(theRecords.Records[i].C14D100K, 32)
 						if e != nil {
 							fmt.Printf("%s", e)
