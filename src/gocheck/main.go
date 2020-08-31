@@ -15,15 +15,22 @@ import (
 func main() {
 	checkfile()
 
-	number := flag.Int("n", 1, "number of records to return")
-	refresh := flag.Bool("f", false, "get updated file")
-	deaths := flag.Bool("d", false, "get number of deaths")
-	fourteendayavg := flag.Bool("c", false, "get average number of new cases per 100K of population")
+	number := flag.Int("n", 5, "number of records to return")
+	refresh := flag.Bool("f", false, "get updated data file from the ECDC")
+	deaths := flag.Bool("d", false, "get total number of new deaths")
+	cases := flag.Bool("c", false, "get total number of new cases")
 	flag.Parse()
 
 	var countries = flag.Args()
-	if len(countries) == 0 {
-		fmt.Println("A list of country codes must be supplied e.g IE DE ...")
+	if len(countries) == 0 && !*refresh {
+		fmt.Println(`Usage of ./check-ecdc:
+	-c	get total number of new cases
+	-d	get total number of new deaths
+	-f	get updated file file the ECDC
+	-n	number of records to return (default 5)
+
+	default get average number of new cases per 100K of population for the last 14days.
+	A list of country codes must be supplied e.g IE DE ...`)
 	}
 
 	if *refresh {
@@ -46,10 +53,10 @@ func main() {
 	switch {
 	case *deaths:
 		records.GetDeaths(*number, countries, theRecords)
-	case *fourteendayavg:
-		records.Get14dayaverage(*number, countries, theRecords)
-	default:
+	case *cases:
 		records.GetCases(*number, countries, theRecords)
+	default:
+		records.Get14dayaverage(*number, countries, theRecords)
 	}
 }
 
