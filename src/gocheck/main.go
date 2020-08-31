@@ -22,6 +22,9 @@ func main() {
 	flag.Parse()
 
 	var countries = flag.Args()
+	if len(countries) == 0 {
+		fmt.Println("A list of country codes must be supplied e.g IE DE ...")
+	}
 
 	if *refresh {
 		getdata()
@@ -76,4 +79,7 @@ func getdata() {
 	defer out.Close()
 
 	_, err = io.Copy(out, resp.Body)
+	if err != nil {
+		fmt.Printf("%s", err)
+	}
 }
