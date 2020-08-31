@@ -39,15 +39,13 @@ func main() {
 	if e != nil {
 		fmt.Printf("%s", e)
 	}
-	if *deaths {
-		if len(countries) != 0 {
-			records.GetDeaths(*number, countries, theRecords)
-		}
-	} else if *fourteendayavg {
-		if len(countries) != 0 {
-			records.Get14dayaverage(*number, countries, theRecords)
-		}
-	} else {
+
+	switch {
+	case *deaths:
+		records.GetDeaths(*number, countries, theRecords)
+	case *fourteendayavg:
+		records.Get14dayaverage(*number, countries, theRecords)
+	default:
 		records.GetCases(*number, countries, theRecords)
 	}
 }
