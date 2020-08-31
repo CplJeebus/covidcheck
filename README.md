@@ -6,14 +6,23 @@ Simple app to track various covid-19 stats
 
 ### Refresh\Init data 
 
+Script Version
 `check-ecdc.sh f` 
+
+Go Version
+`check-ecdc -f`
+
 
 ### Get 14 day average of new cases per 100k of population
 
+Shell version
 
 `check-ecdc.sh [Number of Days] [Country 1] [Country 2] [Country.....` 
 
 `./check-ecdc.sh 5 IE DE` 
+
+Go Version
+`./check-ecdc -n [Number of Days] [Country 1] [Country 2] [Country.....`
 
 ```
 18.27	IE	13/08/2020
@@ -55,6 +64,10 @@ Simple app to track various covid-19 stats
 
 `./check-ecdc.sh d 5 IE DE` 
 
+Go Version
+`./check-ecdc -n [Number of Days] -d [Country 1] [Country 2] [Country.....`
+
+
 ```
 1	IE	13/08/2020
 1	IE	12/08/2020
@@ -91,9 +104,9 @@ Probably won't do much more but;
 
 ### Go Version
 Where to start! Here I suppose;
-  * Get functionality parity to the shell script *prioity 1*
-  * Refactor to get modules working properly and figure out my hinky `$GOPATH` issues.
-  * Refactor some more for the sake of it
+  * Get functionality parity to the shell script *prioity 1* - **DONE**
+  * Refactor to get modules working properly and figure out my hinky `$GOPATH` issues. **DONE** _Note:_ My vim config still insist my GOPATH is wrong!
+  * Refactor some more for the sake of it **DONE**
   * Report usage.
   * Better arg handling logic, especially aroud required args and defaults and stuff.
   * Arg validation for Country codes, I actually like the silent fail but a simple `toupper` would be cool
