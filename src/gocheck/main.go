@@ -18,6 +18,7 @@ func main() {
 	number := flag.Int("n", 1, "number of records to return")
 	refresh := flag.Bool("f", false, "get updated file")
 	deaths := flag.Bool("d", false, "get number of deaths")
+	fourteendayavg := flag.Bool("c", false, "get average number of new cases per 100K of population")
 	flag.Parse()
 
 	var countries = flag.Args()
@@ -42,12 +43,12 @@ func main() {
 		if len(countries) != 0 {
 			records.GetDeaths(*number, countries, theRecords)
 		}
-	} else {
+	} else if *fourteendayavg {
 		if len(countries) != 0 {
-			records.GetCases(*number, countries, theRecords)
-
+			records.Get14dayaverage(*number, countries, theRecords)
 		}
-
+	} else {
+		records.GetCases(*number, countries, theRecords)
 	}
 }
 

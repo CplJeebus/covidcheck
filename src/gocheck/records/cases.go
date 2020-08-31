@@ -3,7 +3,6 @@ package records
 import (
 	"fmt"
 	"gocheck/types"
-	"strconv"
 )
 
 func GetCases(number int, countries []string, theRecords types.Ecdcdata) {
@@ -15,12 +14,9 @@ func GetCases(number int, countries []string, theRecords types.Ecdcdata) {
 			for i := range theRecords.Records {
 				if j < number {
 					if theRecords.Records[i].GeoID == countries[p] {
-						cases, e := strconv.ParseFloat(theRecords.Records[i].C14D100K, 32)
-						if e != nil {
-							fmt.Printf("%s", e)
-						}
+						var cases = theRecords.Records[i].Cases
 
-						fmt.Printf("%.2f\t%s\t%s\n", cases, theRecords.Records[i].GeoID, theRecords.Records[i].DateRep)
+						fmt.Printf("%d\t%s\t%s\n", cases, theRecords.Records[i].GeoID, theRecords.Records[i].DateRep)
 						j++
 					}
 				}
