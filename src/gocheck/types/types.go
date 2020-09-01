@@ -16,3 +16,9 @@ type Ecdcdata struct {
 		C14D100K                string `json:"Cumulative_number_for_14_days_of_COVID-19_cases_per_100000"`
 	} `json:"records"`
 }
+
+type C14D100K struct {
+	Cases   string
+	GeoID   string
+	DateRep string
+}
