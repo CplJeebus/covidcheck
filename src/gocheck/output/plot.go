@@ -1,52 +1,17 @@
-package records
+package output
 
 import (
-	"fmt"
 	"gocheck/types"
-	"strconv"
-	"strings"
-	"time"
-
 	"gonum.org/v1/plot"
 	"gonum.org/v1/plot/plotter"
 	"gonum.org/v1/plot/plotutil"
 	"gonum.org/v1/plot/vg"
+	"strconv"
+	"strings"
+	"time"
 )
 
-func Get14dayaverage(number int, countries []string, theRecords types.Ecdcdata) {
-	var j int
-
-	Rs := make([]types.C14D100K, 0)
-
-	var r types.C14D100K
-
-	if len(countries) != 0 {
-		for p := range countries {
-			j = 0
-			for i := range theRecords.Records {
-				if j < number {
-					if theRecords.Records[i].GeoID == strings.ToUpper(countries[p]) {
-						cases, e := strconv.ParseFloat(theRecords.Records[i].C14D100K, 32)
-						if e != nil {
-							fmt.Printf("%s", e)
-						}
-
-						fmt.Printf("%.2f\t%s\t%s\n", cases, theRecords.Records[i].GeoID, theRecords.Records[i].DateRep)
-						r.Cases = theRecords.Records[i].C14D100K
-						r.GeoID = theRecords.Records[i].GeoID
-						r.DateRep = theRecords.Records[i].DateRep
-						Rs = append(Rs, r)
-						j++
-					}
-				}
-			}
-		}
-	}
-
-	CreatePlot(Rs, countries)
-}
-
-func CreatePlot(r []types.C14D100K, countries []string) {
+func CreatePlot(r []types.CasesRecord, countries []string) {
 	p, err := plot.New()
 	if err != nil {
 		panic(err)
@@ -72,7 +37,7 @@ func CreatePlot(r []types.C14D100K, countries []string) {
 	}
 }
 
-func CreatePoints(r []types.C14D100K, s string) plotter.XYs {
+func CreatePoints(r []types.CasesRecord, s string) plotter.XYs {
 	pts := make([]plotter.XY, 0)
 
 	var pt plotter.XY

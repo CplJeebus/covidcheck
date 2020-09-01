@@ -17,7 +17,7 @@ type Ecdcdata struct {
 	} `json:"records"`
 }
 
-type C14D100K struct {
+type CasesRecord struct {
 	Cases   string
 	GeoID   string
 	DateRep string

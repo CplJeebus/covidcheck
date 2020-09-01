@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"gocheck/records"
 	"gocheck/types"
+	"gocheck/output"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -38,6 +39,7 @@ func main() {
 	}
 
 	var theRecords types.Ecdcdata
+	var ResultSet []types.CasesRecord
 
 	fbytes, e := ioutil.ReadFile("./today-go.json")
 
@@ -52,12 +54,15 @@ func main() {
 
 	switch {
 	case *deaths:
-		records.GetDeaths(*number, countries, theRecords)
+		ResultSet = records.GetRecords(*number, countries, theRecords,"deaths")
 	case *cases:
-		records.GetCases(*number, countries, theRecords)
+		ResultSet = records.GetRecords(*number, countries, theRecords, "cases")
 	default:
-		records.Get14dayaverage(*number, countries, theRecords)
+		ResultSet = records.GetRecords(*number, countries, theRecords,"c14d100k")
 	}
+
+	output.PrintCases(ResultSet)
+	output.CreatePlot(ResultSet, countries)
 }
 
 func checkfile() {

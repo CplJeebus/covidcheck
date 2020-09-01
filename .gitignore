@@ -1,3 +1,9 @@
 *.json
 check-ecdc
 *.png
+pkg
+src/gioui.org/
+src/github.com/
+src/golang.org/
+src/gonum.org/
+src/rsc.io/
