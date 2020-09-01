@@ -9,6 +9,7 @@ import (
 
 	"gonum.org/v1/plot"
 	"gonum.org/v1/plot/plotter"
+	"gonum.org/v1/plot/plotutil"
 	"gonum.org/v1/plot/vg"
 )
 
@@ -58,23 +59,25 @@ func CreatePlot(r []types.C14D100K, countries []string) {
 	p.X.Tick.Marker = xticks
 	p.Y.Label.Text = "Value"
 
+	lines := make([]interface{}, 0)
 	for c := range countries {
-		line, points, err := plotter.NewLinePoints(CreatePoints(r, strings.ToUpper(countries[c])))
-		if err != nil {
-			panic(err)
-		}
-
-		p.Add(line, points)
+		lines = append(lines, countries[c])
+		lines = append(lines, CreatePoints(r, strings.ToUpper(countries[c])))
 	}
 
-	if err := p.Save(4*vg.Inch, 4*vg.Inch, "points.png"); err != nil {
+	_ = plotutil.AddLinePoints(p, lines...)
+
+	if err := p.Save(12*vg.Inch, 12*vg.Inch, "points.png"); err != nil {
 		panic(err)
 	}
 }
 
 func CreatePoints(r []types.C14D100K, s string) plotter.XYs {
-	pts := make(plotter.XYs, len(r))
-	for i := range pts {
+	pts := make([]plotter.XY, 0)
+
+	var pt plotter.XY
+
+	for i := range r {
 		if r[i].GeoID == s {
 			layout := "02/01/2006"
 			t, _ := time.Parse(layout, r[i].DateRep)
@@ -84,9 +87,9 @@ func CreatePoints(r []types.C14D100K, s string) plotter.XYs {
 				panic(err)
 			}
 
-			fmt.Printf("%s %f \n", t, c)
-			pts[i].X = float64(t.Unix())
-			pts[i].Y = c
+			pt.X = float64(t.Unix())
+			pt.Y = c
+			pts = append(pts, pt)
 		}
 	}
 
