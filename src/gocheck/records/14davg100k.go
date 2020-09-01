@@ -5,10 +5,10 @@ import (
 	"gocheck/types"
 	"strconv"
 	"strings"
+	"time"
 
 	"gonum.org/v1/plot"
 	"gonum.org/v1/plot/plotter"
-	"gonum.org/v1/plot/plotutil"
 	"gonum.org/v1/plot/vg"
 )
 
@@ -42,22 +42,29 @@ func Get14dayaverage(number int, countries []string, theRecords types.Ecdcdata) 
 		}
 	}
 
-	CreatePlot(Rs)
+	CreatePlot(Rs, countries)
 }
 
-func CreatePlot(r []types.C14D100K) {
+func CreatePlot(r []types.C14D100K, countries []string) {
 	p, err := plot.New()
 	if err != nil {
 		panic(err)
 	}
 
-	p.Title.Text = "Plotutil example"
-	p.X.Label.Text = "X"
-	p.Y.Label.Text = "Y"
+	xticks := plot.TimeTicks{Format: "2006-01-02"}
 
-	err = plotutil.AddLinePoints(p, "first", CreatePoints())
-	if err != nil {
-		panic(err)
+	p.Title.Text = "News Cases per 100K 14 day average"
+	p.X.Label.Text = "Date"
+	p.X.Tick.Marker = xticks
+	p.Y.Label.Text = "Value"
+
+	for c := range countries {
+		line, points, err := plotter.NewLinePoints(CreatePoints(r, strings.ToUpper(countries[c])))
+		if err != nil {
+			panic(err)
+		}
+
+		p.Add(line, points)
 	}
 
 	if err := p.Save(4*vg.Inch, 4*vg.Inch, "points.png"); err != nil {
@@ -65,12 +72,23 @@ func CreatePlot(r []types.C14D100K) {
 	}
 }
 
-func CreatePoints(r []types.C14D100K) plotter.XY {
-	pts := make(plotter.XY, len(r))
+func CreatePoints(r []types.C14D100K, s string) plotter.XYs {
+	pts := make(plotter.XYs, len(r))
 	for i := range pts {
-		c, err := strconv.ParseFloat(r[i].Cases, 64)
-		pts[i].X = r[i].DateRep
-		pts[i].Y = c
+		if r[i].GeoID == s {
+			layout := "02/01/2006"
+			t, _ := time.Parse(layout, r[i].DateRep)
+			c, err := strconv.ParseFloat(r[i].Cases, 64)
+
+			if err != nil {
+				panic(err)
+			}
+
+			fmt.Printf("%s %f \n", t, c)
+			pts[i].X = float64(t.Unix())
+			pts[i].Y = c
+		}
 	}
+
 	return pts
 }
