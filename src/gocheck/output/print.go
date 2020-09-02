@@ -5,9 +5,8 @@ import (
 	"gocheck/types"
 )
 
-func PrintCases(ResultSet []types.CasesRecord){
-
-	for i := range ResultSet {
-				fmt.Printf("%v\t%s\t%s\n", ResultSet[i].Cases, ResultSet[i].GeoID, ResultSet[i].DateRep)
-			}
+func PrintCases(resultset []types.CasesRecord) {
+	for i := range resultset {
+		fmt.Printf("%v\t%s\t%s\n", resultset[i].Cases, resultset[i].GeoID, resultset[i].DateRep)
+	}
 }

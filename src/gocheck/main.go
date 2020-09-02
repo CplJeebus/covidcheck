@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"gocheck/output"
 	"gocheck/records"
 	"gocheck/types"
-	"gocheck/output"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -39,6 +39,7 @@ func main() {
 	}
 
 	var theRecords types.Ecdcdata
+
 	var ResultSet []types.CasesRecord
 
 	fbytes, e := ioutil.ReadFile("./today-go.json")
@@ -54,11 +55,11 @@ func main() {
 
 	switch {
 	case *deaths:
-		ResultSet = records.GetRecords(*number, countries, theRecords,"deaths")
+		ResultSet = records.GetRecords(*number, countries, theRecords, "deaths")
 	case *cases:
 		ResultSet = records.GetRecords(*number, countries, theRecords, "cases")
 	default:
-		ResultSet = records.GetRecords(*number, countries, theRecords,"c14d100k")
+		ResultSet = records.GetRecords(*number, countries, theRecords, "c14d100k")
 	}
 
 	output.PrintCases(ResultSet)
