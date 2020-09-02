@@ -107,11 +107,15 @@ Where to start! Here I suppose;
   * Get functionality parity to the shell script *prioity 1* - **DONE**
   * Refactor to get modules working properly and figure out my hinky `$GOPATH` issues. **DONE** _Note:_ My vim config still insist my GOPATH is wrong!
   * Refactor some more for the sake of it **DONE**
-  * Report usage and make interface better the flags are confusing
-  * Better arg handling logic, especially aroud required args and defaults and stuff.
-  * Arg validation for Country codes, I actually like the silent fail but a simple `toupper` would be cool
+  * Report usage and make interface better the flags are confusing **DONE** or at least better.
+  * Better arg handling logic, especially aroud required args and defaults and stuff. **DONE** Again its better.
+  * Arg validation for Country codes, I actually like the silent fail but a simple `toupper` would be cool **DONE** 
   * Output validation. This might require some research to find the background, but app should filter nonsensical output. _"-48" deaths UK._ I think we have a bigger problem than covid!
   * Nicer formatting tabulating via date for instance.
-  * lots more stuff!!
+  * Add\Improve output formats csv,json etc.
+  * Fiddle with the scales of the graphs. 
+  * Fix titles on the graphs and general clean up
+  * Allow different file names for the output plots.
+  * Do per capita (or deaths per 10^6) calcs for new cases and deaths! 
 
 
