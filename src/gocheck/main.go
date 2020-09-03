@@ -22,7 +22,10 @@ func main() {
 	cases := flag.Bool("c", false, "get total number of new cases")
 	deathspermillion := flag.Bool("dm", false, "get total number of new deaths")
 	casespermillion := flag.Bool("cm", false, "get total number of new cases")
-	out := flag.String("o", "print", "Output format (currently) plot or screen, default is screen")
+	out := flag.String("o", "print", `Output format (currently):
+				default - Prints a list of the results to the stdout
+				csv - Prints csv formatted results to stdout
+				plot - Creates a graph "points.png"`)
 	flag.Parse()
 
 	var countries = flag.Args()
@@ -79,7 +82,7 @@ func main() {
 	switch {
 	case *out == "plot":
 		output.CreatePlot(ResultSet, countries, title)
-	case *out == "tab":
+	case *out == "csv":
 		output.PrintCasesTabs(ResultSet, countries)
 	default:
 		output.PrintCases(ResultSet)

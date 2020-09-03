@@ -57,6 +57,10 @@ Go Version
 555	DE	09/08/2020
 ```
 
+Go Version
+`./check-ecdc -n [Number of Days] -c [Country 1] [Country 2] [Country.....`
+
+
 ### Get deaths in the previous _n_ days  
 
 
@@ -80,6 +84,64 @@ Go Version
 1	DE	10/08/2020
 1	DE	09/08/2020
 ```
+
+##Go Version Only##
+
+###Get new deaths per million per day in the previous _n_ days  
+
+`./check-ecdc -n [Number of Days] -dm [Country 1] [Country 2] [Country.....`
+
+```
+0.0000	IE	31/08/2020
+0.0000	IE	30/08/2020
+0.0000	IE	29/08/2020
+0.0000	IE	28/08/2020
+0.0000	IE	27/08/2020
+0.0361	DE	31/08/2020
+0.0723	DE	30/08/2020
+0.0120	DE	29/08/2020
+0.0361	DE	28/08/2020
+0.0602	DE	27/08/2020
+```
+
+###Get new cases per million per day in the previous _n_ days  
+
+`./check-ecdc -n [Number of Days] -cm [Country 1] [Country 2] [Country.....`
+
+```
+8.1562	IE	31/08/2020
+28.7506	IE	30/08/2020
+25.6921	IE	29/08/2020
+18.3515	IE	28/08/2020
+33.0326	IE	27/08/2020
+7.3477	DE	31/08/2020
+9.4556	DE	30/08/2020
+17.8152	DE	29/08/2020
+18.9233	DE	28/08/2020
+18.1524	DE	27/08/2020
+```
+
+###Create a graph of any of the above###
+
+This will create a file `points.png` in you current directory
+`/check-ecdc -cm -o plot ie de`
+
+
+###Create a graph of any of the above###
+
+Output csv formated to stdout.
+
+`./check-ecdc -c -o csv ie de`
+
+```
+Date,ie,de
+31/08/2020,40,610
+30/08/2020,141,785
+29/08/2020,126,1479
+28/08/2020,90,1571
+27/08/2020,162,1507
+```
+
 
 ## Notes 
 
@@ -111,11 +173,11 @@ Where to start! Here I suppose;
   * Better arg handling logic, especially aroud required args and defaults and stuff. **DONE** Again its better.
   * Arg validation for Country codes, I actually like the silent fail but a simple `toupper` would be cool **DONE** 
   * Output validation. This might require some research to find the background, but app should filter nonsensical output. _"-48" deaths UK._ I think we have a bigger problem than covid!
-  * Nicer formatting tabulating via date for instance.
-  * Add\Improve output formats csv,json etc.
+  * Nicer formatting tabulating via date for instance. **STARTED** Now can output in _csv_ format 
+  * Add\Improve output formats csv,json etc. **STARTED** See above.
   * Fiddle with the scales of the graphs. 
-  * Fix titles on the graphs and general clean up
+  * Fix titles on the graphs and general clean up **DONE**
   * Allow different file names for the output plots.
-  * Do per capita (or deaths per 10^6) calcs for new cases and deaths! 
+  * Do per capita (or deaths per 10^6) calcs for new cases and deaths! **DONE** _-dm_ and _-cm_ will give you cases per 10^6
 
 
