@@ -16,13 +16,17 @@ func PrintCasesTabs(resultset []types.CasesRecord, countries []string) {
 	m := make(map[string][]string)
 	rsc := ResultsetByCountry(resultset, countries)
 
+	fmt.Printf("Date,%s\n", strings.Join(countries, ","))
+
 	for i := range rsc {
 		for j := range rsc[i] {
 			m[rsc[i][j].DateRep] = append(m[rsc[i][j].DateRep], rsc[i][j].Cases)
 		}
 	}
 
-	fmt.Printf("%v \n", m)
+	for k, v := range m {
+		fmt.Printf("%s,%s\n", k, strings.Join(v, ","))
+	}
 }
 
 func ResultsetByCountry(resultset []types.CasesRecord, countries []string) [][]types.CasesRecord {
@@ -40,6 +44,6 @@ func ResultsetByCountry(resultset []types.CasesRecord, countries []string) [][]t
 		rsc = append(rsc, rs)
 		rs = nil
 	}
-	fmt.Printf("%v \n", rsc)
+
 	return rsc
 }

@@ -54,5 +54,5 @@ func StatsPerMillion(stat, pop int) string {
 	statf := float64(stat)
 	popf := float64(pop)
 
-	return strconv.FormatFloat((statf / (popf / million)), 'e', -1, 64)
+	return strconv.FormatFloat((statf / (popf / million)), 'f', 4, 64)
 }
