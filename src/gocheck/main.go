@@ -20,6 +20,8 @@ func main() {
 	refresh := flag.Bool("f", false, "get updated data file from the ECDC")
 	deaths := flag.Bool("d", false, "get total number of new deaths")
 	cases := flag.Bool("c", false, "get total number of new cases")
+	deathspermillion := flag.Bool("dm", false, "get total number of new deaths")
+	casespermillion := flag.Bool("cm", false, "get total number of new cases")
 	out := flag.String("o", "print", "Output format (currently) plot or screen, default is screen")
 	flag.Parse()
 
@@ -59,6 +61,10 @@ func main() {
 		ResultSet = records.GetRecords(*number, countries, theRecords, "deaths")
 	case *cases:
 		ResultSet = records.GetRecords(*number, countries, theRecords, "cases")
+	case *casespermillion:
+		ResultSet = records.GetRecords(*number, countries, theRecords, "casespermillion")
+	case *deathspermillion:
+		ResultSet = records.GetRecords(*number, countries, theRecords, "deathspermillion")
 	default:
 		ResultSet = records.GetRecords(*number, countries, theRecords, "c14d100k")
 	}

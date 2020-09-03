@@ -1,15 +1,16 @@
 package records
 
 import (
-
 	"gocheck/types"
 	"strconv"
 	"strings"
 )
 
-func GetRecords(number int, countries []string, theRecords types.Ecdcdata, stat string) []types.CasesRecord{
+func GetRecords(number int, countries []string, theRecords types.Ecdcdata, stat string) []types.CasesRecord {
 	var j int
+
 	var data string
+
 	ResultSet := make([]types.CasesRecord, 0)
 
 	var result types.CasesRecord
@@ -25,9 +26,14 @@ func GetRecords(number int, countries []string, theRecords types.Ecdcdata, stat 
 							data = strconv.Itoa(theRecords.Records[i].Deaths)
 						case stat == "cases":
 							data = strconv.Itoa(theRecords.Records[i].Cases)
+						case stat == "casespermillion":
+							data = StatsPerMillion(theRecords.Records[i].Cases, theRecords.Records[i].PopData2019)
+						case stat == "deathspermillion":
+							data = StatsPerMillion(theRecords.Records[i].Deaths, theRecords.Records[i].PopData2019)
 						default:
 							data = theRecords.Records[i].C14D100K
 						}
+
 						result.Cases = data
 						result.GeoID = theRecords.Records[i].GeoID
 						result.DateRep = theRecords.Records[i].DateRep
@@ -40,4 +46,13 @@ func GetRecords(number int, countries []string, theRecords types.Ecdcdata, stat 
 	}
 
 	return ResultSet
+}
+
+func StatsPerMillion(stat, pop int) string {
+	const million float64 = 1000000
+
+	statf := float64(stat)
+	popf := float64(pop)
+
+	return strconv.FormatFloat((statf / (popf / million)), 'e', -1, 64)
 }
