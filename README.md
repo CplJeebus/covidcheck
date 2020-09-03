@@ -121,13 +121,13 @@ Go Version
 18.1524	DE	27/08/2020
 ```
 
-### Create a graph of any of the above###
+### Create a graph of any of the above
 
 This will create a file `points.png` in you current directory
 `/check-ecdc -cm -o plot ie de`
 
 
-### Create a graph of any of the above###
+### Create a graph of any of the above
 
 Output csv formated to stdout.
 
