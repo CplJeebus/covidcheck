@@ -85,9 +85,9 @@ Go Version
 1	DE	09/08/2020
 ```
 
-##Go Version Only##
+## Go Version Only
 
-###Get new deaths per million per day in the previous _n_ days  
+### Get new deaths per million per day in the previous _n_ days  
 
 `./check-ecdc -n [Number of Days] -dm [Country 1] [Country 2] [Country.....`
 
@@ -104,7 +104,7 @@ Go Version
 0.0602	DE	27/08/2020
 ```
 
-###Get new cases per million per day in the previous _n_ days  
+### Get new cases per million per day in the previous _n_ days  
 
 `./check-ecdc -n [Number of Days] -cm [Country 1] [Country 2] [Country.....`
 
@@ -121,13 +121,13 @@ Go Version
 18.1524	DE	27/08/2020
 ```
 
-###Create a graph of any of the above###
+### Create a graph of any of the above###
 
 This will create a file `points.png` in you current directory
 `/check-ecdc -cm -o plot ie de`
 
 
-###Create a graph of any of the above###
+### Create a graph of any of the above###
 
 Output csv formated to stdout.
 
