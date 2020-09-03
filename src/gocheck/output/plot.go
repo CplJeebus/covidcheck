@@ -12,7 +12,7 @@ import (
 	"gonum.org/v1/plot/vg"
 )
 
-func CreatePlot(r []types.CasesRecord, countries []string) {
+func CreatePlot(r []types.CasesRecord, countries []string, title string) {
 	p, err := plot.New()
 	if err != nil {
 		panic(err)
@@ -20,7 +20,7 @@ func CreatePlot(r []types.CasesRecord, countries []string) {
 
 	xticks := plot.TimeTicks{Format: "2006-01-02"}
 
-	p.Title.Text = "News Cases per 100K 14 day average"
+	p.Title.Text = title
 	p.X.Label.Text = "Date"
 	p.X.Tick.Marker = xticks
 	p.Y.Label.Text = "Value"

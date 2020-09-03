@@ -45,6 +45,8 @@ func main() {
 
 	var ResultSet []types.CasesRecord
 
+	var title string
+
 	fbytes, e := ioutil.ReadFile("./today-go.json")
 
 	if e != nil {
@@ -59,19 +61,24 @@ func main() {
 	switch {
 	case *deaths:
 		ResultSet = records.GetRecords(*number, countries, theRecords, "deaths")
+		title = "New Deaths per day"
 	case *cases:
 		ResultSet = records.GetRecords(*number, countries, theRecords, "cases")
+		title = "New Cases per day"
 	case *casespermillion:
 		ResultSet = records.GetRecords(*number, countries, theRecords, "casespermillion")
+		title = "New Cases per million of pop per day"
 	case *deathspermillion:
 		ResultSet = records.GetRecords(*number, countries, theRecords, "deathspermillion")
+		title = "New Deaths per million of pop per day"
 	default:
 		ResultSet = records.GetRecords(*number, countries, theRecords, "c14d100k")
+		title = "New Cases per 100K 14 day average"
 	}
 
 	switch {
 	case *out == "plot":
-		output.CreatePlot(ResultSet, countries)
+		output.CreatePlot(ResultSet, countries, title)
 	default:
 		output.PrintCases(ResultSet)
 	}
