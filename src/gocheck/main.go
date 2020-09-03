@@ -18,14 +18,15 @@ func main() {
 
 	number := flag.Int("n", 5, "number of records to return")
 	refresh := flag.Bool("f", false, "get updated data file from the ECDC")
-	deaths := flag.Bool("d", false, "get total number of new deaths")
-	cases := flag.Bool("c", false, "get total number of new cases")
-	deathspermillion := flag.Bool("dm", false, "get total number of new deaths")
-	casespermillion := flag.Bool("cm", false, "get total number of new cases")
-	out := flag.String("o", "print", `Output format (currently):
-				default - Prints a list of the results to the stdout
-				csv - Prints csv formatted results to stdout
-				plot - Creates a graph "points.png"`)
+	deaths := flag.Bool("d", false, "get total number of new deaths per day")
+	cases := flag.Bool("c", false, "get total number of new cases per day")
+	deathspermillion := flag.Bool("dm", false, "get number of new deaths per million per day")
+	casespermillion := flag.Bool("cm", false, "get number of new cases per million per day")
+	out := flag.String("o", "", `Output format (currently):
+default - Prints a list of the results to the stdout
+csv - Prints csv formatted results to stdout
+plot - Creates a graph "points.png"`)
+
 	flag.Parse()
 
 	var countries = flag.Args()
@@ -35,6 +36,13 @@ func main() {
 	-d	get total number of new deaths
 	-f	get updated file file the ECDC
 	-n	number of records to return (default 5)
+
+	-dm get number of new deaths per million per day
+	-cm get number of new cases per million per day
+	-o  Output format (currently):
+		default - Prints a list of the results to the stdout
+		csv - Prints csv formatted results to stdout
+		plot - Creates a graph "points.png" in the current directory
 
 	default get average number of new cases per 100K of population for the last 14days.
 	A list of country codes must be supplied e.g IE DE ...`)

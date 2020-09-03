@@ -21,6 +21,8 @@ func CreatePlot(r []types.CasesRecord, countries []string, title string) {
 	xticks := plot.TimeTicks{Format: "2006-01-02"}
 
 	p.Title.Text = title
+	p.Legend.Top = true
+	p.Legend.Left = false
 	p.X.Label.Text = "Date"
 	p.X.Tick.Marker = xticks
 	p.Y.Label.Text = "Value"
