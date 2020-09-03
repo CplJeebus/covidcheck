@@ -127,7 +127,7 @@ This will create a file `points.png` in you current directory
 `/check-ecdc -cm -o plot ie de`
 
 
-### Create a graph of any of the above
+### Output in csv format of any of the above
 
 Output csv formated to stdout.
 
