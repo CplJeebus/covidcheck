@@ -79,6 +79,8 @@ func main() {
 	switch {
 	case *out == "plot":
 		output.CreatePlot(ResultSet, countries, title)
+	case *out == "tab":
+		output.PrintCasesTabs(ResultSet, countries)
 	default:
 		output.PrintCases(ResultSet)
 	}
