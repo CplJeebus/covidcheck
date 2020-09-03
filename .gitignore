@@ -1,6 +1,7 @@
 *.json
 check-ecdc
 *.png
+!sample.png
 pkg
 src/gioui.org/
 src/github.com/
