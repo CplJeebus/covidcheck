@@ -166,18 +166,10 @@ Probably won't do much more but;
 
 ### Go Version
 Where to start! Here I suppose;
-  * Get functionality parity to the shell script *prioity 1* - **DONE**
-  * Refactor to get modules working properly and figure out my hinky `$GOPATH` issues. **DONE** _Note:_ My vim config still insist my GOPATH is wrong!
-  * Refactor some more for the sake of it **DONE**
-  * Report usage and make interface better the flags are confusing **DONE** or at least better.
-  * Better arg handling logic, especially aroud required args and defaults and stuff. **DONE** Again its better.
-  * Arg validation for Country codes, I actually like the silent fail but a simple `toupper` would be cool **DONE** 
   * Output validation. This might require some research to find the background, but app should filter nonsensical output. _"-48" deaths UK._ I think we have a bigger problem than covid!
-  * Nicer formatting tabulating via date for instance. **STARTED** Now can output in _csv_ format 
-  * Add\Improve output formats csv,json etc. **STARTED** See above.
   * Fiddle with the scales of the graphs. 
-  * Fix titles on the graphs and general clean up **DONE**
   * Allow different file names for the output plots.
   * Do per capita (or deaths per 10^6) calcs for new cases and deaths! **DONE** _-dm_ and _-cm_ will give you cases per 10^6
-
+  * See if I can add smoothing functions to the -dm and -cm flags. `us` data is especially bad seems the CDC does not work Sundays! 
+  * Some cross platform way to open the graphs automatically. 
 
