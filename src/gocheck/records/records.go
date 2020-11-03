@@ -34,6 +34,10 @@ func GetRecords(number int, countries []string, theRecords types.Ecdcdata, stat 
 							data = theRecords.Records[i].C14D100K
 						}
 
+						if s, _ := strconv.ParseFloat(data, 64); s < 0 {
+							data = "0"
+						}
+
 						result.Cases = data
 						result.GeoID = theRecords.Records[i].GeoID
 						result.DateRep = theRecords.Records[i].DateRep
