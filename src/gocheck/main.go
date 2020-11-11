@@ -11,6 +11,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"time"
 )
 
 func main() {
@@ -23,9 +24,10 @@ func main() {
 	deathspermillion := flag.Bool("dm", false, "get number of new deaths per million per day")
 	casespermillion := flag.Bool("cm", false, "get number of new cases per million per day")
 	out := flag.String("o", "", `Output format (currently):
-default - Prints a list of the results to the stdout
+raw - Prints a list of the results to the stdout
 csv - Prints csv formatted results to stdout
-plot - Creates a graph "points.png"`)
+plot - Creates a graph "points.png" in the current directory
+default - Creates a graph"`)
 
 	flag.Parse()
 
@@ -40,9 +42,10 @@ plot - Creates a graph "points.png"`)
 	-dm get number of new deaths per million per day
 	-cm get number of new cases per million per day
 	-o  Output format (currently):
-		default - Prints a list of the results to the stdout
+		raw - Prints a list of the results to the stdout
 		csv - Prints csv formatted results to stdout
 		plot - Creates a graph "points.png" in the current directory
+		default - Creates a graph
 
 	default get average number of new cases per 100K of population for the last 14days.
 	A list of country codes must be supplied e.g IE DE ...`)
@@ -90,15 +93,24 @@ plot - Creates a graph "points.png"`)
 	switch {
 	case *out == "plot":
 		output.CreatePlot(ResultSet, countries, title)
+	case *out == "raw":
+		output.PrintCases(ResultSet)
 	case *out == "csv":
 		output.PrintCasesTabs(ResultSet, countries)
 	default:
-		output.PrintCases(ResultSet)
+		output.CreatePlot(ResultSet, countries, title)
 	}
 }
 
 func checkfile() {
-	_, err := os.Stat("./today-go.json")
+	f, err := os.Stat("./today-go.json")
+	created := f.ModTime()
+
+	if time.Since(created) > 8*time.Hour {
+		fmt.Println("Stale file")
+		getdata()
+	}
+
 	if os.IsNotExist(err) {
 		getdata()
 	}
