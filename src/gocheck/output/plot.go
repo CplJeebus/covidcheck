@@ -1,7 +1,6 @@
 package output
 
 import (
-	"fmt"
 	"gocheck/types"
 	. "gocheck/types"
 	"strconv"
@@ -38,18 +37,34 @@ func CreatePlot(r []types.CasesRecord, countries []string, title string) {
 	var e Events
 
 	e.LoadEvents()
-	for i := range e.Event {
-		lines = append(lines, e.Event[i].Name)
-		lines = append(lines, EventPoints(e.Event[i].Date, GetMaxPoint(r)))
-	}
 
-	fmt.Println(GetMaxPoint(r))
+	for i := range e.Event {
+		if isValidEvent(e.Event[i], r) {
+			lines = append(lines, e.Event[i].Name)
+			lines = append(lines, EventPoints(e.Event[i].Date, GetMaxPoint(r)))
+		}
+	}
 
 	_ = plotutil.AddLinePoints(p, lines...)
 
 	if err := p.Save(12*vg.Inch, 12*vg.Inch, "points.png"); err != nil {
 		panic(err)
 	}
+}
+
+func isValidEvent(e Event, r []types.CasesRecord) bool {
+	layout := "02/01/2006"
+
+	d, _ := time.Parse(layout, e.Date)
+
+	for i := range r {
+		t, _ := time.Parse(layout, r[i].DateRep)
+		if d.After(t) && (r[i].GeoID == strings.ToUpper(e.GeoID)) {
+			return true
+		}
+	}
+
+	return false
 }
 
 func GetMaxPoint(r []types.CasesRecord) float64 {
