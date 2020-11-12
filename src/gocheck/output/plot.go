@@ -3,6 +3,7 @@ package output
 import (
 	"fmt"
 	"gocheck/types"
+	. "gocheck/types"
 	"strconv"
 	"strings"
 	"time"
@@ -33,8 +34,14 @@ func CreatePlot(r []types.CasesRecord, countries []string, title string) {
 		lines = append(lines, countries[c])
 		lines = append(lines, CreatePoints(r, strings.ToUpper(countries[c])))
 	}
-	lines = append(lines, "Event 1")
-	lines = append(lines, EventPoints(GetMaxPoint(r)))
+
+	var e Events
+
+	e.LoadEvents()
+	for i := range e.Event {
+		lines = append(lines, e.Event[i].Name)
+		lines = append(lines, EventPoints(e.Event[i].Date, GetMaxPoint(r)))
+	}
 
 	fmt.Println(GetMaxPoint(r))
 
@@ -63,13 +70,13 @@ func GetMaxPoint(r []types.CasesRecord) float64 {
 	return p
 }
 
-func EventPoints(mx float64) plotter.XYs {
+func EventPoints(d string, mx float64) plotter.XYs {
 	pts := make([]plotter.XY, 0)
 
 	var pt plotter.XY
 
 	layout := "02/01/2006"
-	t, _ := time.Parse(layout, "30/09/2020")
+	t, _ := time.Parse(layout, d)
 	pt.X = float64(t.Unix())
 	pt.Y = 0
 	pts = append(pts, pt)

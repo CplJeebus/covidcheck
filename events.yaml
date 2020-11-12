@@ -1,0 +1,8 @@
+events:
+  - event: "Level 5 lockdown Ireland"
+    geoid: "ie"
+    date: "20/10/2020"
+  - event: "Level 5 Dublin"
+    geoid: "ie"
+    date: "10/10/2020"
+
