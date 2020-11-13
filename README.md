@@ -11,6 +11,7 @@ Script Version
 
 Go Version
 `check-ecdc -f`
+This has been changed and will now refresh the data file if it is older than 8 hours
 
 
 ### Get 14 day average of new cases per 100k of population
@@ -42,7 +43,7 @@ Go Version
 
 `check-ecdc.sh n [Number of Days] [Country 1] [Country 2] [Country.....` 
 
-`./check-ecdc.sh n 5 IE DE` 
+`./check-ecdc.sh -n 5 IE DE` 
 
 ```
 37	IE	13/08/2020
@@ -126,6 +127,8 @@ Go Version
 This will create a file `points.png` in you current directory
 `/check-ecdc -cm -o plot ie de`
 
+This is now the default behaviour
+
 
 ### Output in csv format of any of the above
 
@@ -142,6 +145,20 @@ Date,ie,de
 27/08/2020,162,1507
 ```
 
+### Events 
+Using the `events.yaml` you can specify the dates of key events per country, for example the starting and easing of lockdowns. See the format below. 
+
+```
+events:
+  - event: "First lockdown"
+    geoid: "ie"
+    date: "27/03/2020"
+  - event: "Phase 1 easing"
+    geoid: "ie"
+    date: "18/05/2020"
+```
+
+Events are added by default
 
 ## Notes 
 
@@ -159,17 +176,17 @@ Date,ie,de
 # Todo
 
 ### Shell Script
-Probably won't do much more but;
+~Probably won't do much more but;
   * A `usage` function would be nice
   * Better arg handling
-  * Prereq check for things like `jq`
+  * Prereq check for things like `jq`~
 
 ### Go Version
 Where to start! Here I suppose;
   * Output validation. This might require some research to find the background, but app should filter nonsensical output. _"-48" deaths UK._ I think we have a bigger problem than covid!
   * Fiddle with the scales of the graphs. 
   * Allow different file names for the output plots.
-  * Do per capita (or deaths per 10^6) calcs for new cases and deaths! **DONE** _-dm_ and _-cm_ will give you cases per 10^6
   * See if I can add smoothing functions to the -dm and -cm flags. `us` data is especially bad seems the CDC does not work Sundays! 
-  * Some cross platform way to open the graphs automatically. 
+  * Some cross platform way to open the graphs automatically.
+  * Have added functionality to display key events by default, you should be able to toggle this. 
 
