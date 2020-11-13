@@ -158,7 +158,7 @@ events:
     date: "18/05/2020"
 ```
 
-Events are added by default
+Events are added by default add `-xe` to toggle off. 
 
 ## Notes 
 
@@ -188,5 +188,6 @@ Where to start! Here I suppose;
   * Allow different file names for the output plots.
   * See if I can add smoothing functions to the -dm and -cm flags. `us` data is especially bad seems the CDC does not work Sundays! 
   * Some cross platform way to open the graphs automatically.
-  * Have added functionality to display key events by default, you should be able to toggle this. 
+  * Have added functionality to display key events by default, you should be able to toggle this. -- DONE
+
 
