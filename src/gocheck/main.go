@@ -7,11 +7,7 @@ import (
 	"gocheck/output"
 	"gocheck/records"
 	"gocheck/types"
-	"io"
 	"io/ioutil"
-	"net/http"
-	"os"
-	"time"
 )
 
 func main() {
@@ -99,43 +95,5 @@ default - Creates a graph"`)
 		output.PrintCasesTabs(ResultSet, countries)
 	default:
 		output.CreatePlot(ResultSet, countries, title)
-	}
-}
-
-func checkfile() {
-	f, err := os.Stat("./today-go.json")
-	created := f.ModTime()
-
-	if time.Since(created) > 8*time.Hour {
-		fmt.Println("Stale file")
-		getdata()
-	}
-
-	if os.IsNotExist(err) {
-		getdata()
-	}
-}
-
-func getdata() {
-	dataURL := "https://opendata.ecdc.europa.eu/covid19/casedistribution/json/"
-	resp, err := http.Get(dataURL)
-
-	if err != nil {
-		fmt.Printf("%s", err)
-	}
-
-	fmt.Println("Getting latest file")
-
-	defer resp.Body.Close()
-
-	out, err := os.Create("./today-go.json")
-	if err != nil {
-		fmt.Printf("%s", err)
-	}
-	defer out.Close()
-
-	_, err = io.Copy(out, resp.Body)
-	if err != nil {
-		fmt.Printf("%s", err)
 	}
 }
