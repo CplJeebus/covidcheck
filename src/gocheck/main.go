@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"gocheck/data"
 	"gocheck/output"
 	"gocheck/records"
 	"gocheck/types"
@@ -11,7 +12,7 @@ import (
 )
 
 func main() {
-	checkfile()
+	data.Checkfiles()
 
 	number := flag.Int("n", 5, "number of records to return")
 	refresh := flag.Bool("f", false, "get updated data file from the ECDC")
@@ -19,6 +20,7 @@ func main() {
 	cases := flag.Bool("c", false, "get total number of new cases per day")
 	deathspermillion := flag.Bool("dm", false, "get number of new deaths per million per day")
 	casespermillion := flag.Bool("cm", false, "get number of new cases per million per day")
+	events := flag.Bool("xe", false, "disable the display of events in the output graphs")
 	out := flag.String("o", "", `Output format (currently):
 raw - Prints a list of the results to the stdout
 csv - Prints csv formatted results to stdout
@@ -48,7 +50,7 @@ default - Creates a graph"`)
 	}
 
 	if *refresh {
-		getdata()
+		data.GetData()
 	}
 
 	var theRecords types.Ecdcdata
@@ -88,12 +90,12 @@ default - Creates a graph"`)
 
 	switch {
 	case *out == "plot":
-		output.CreatePlot(ResultSet, countries, title)
+		output.CreatePlot(ResultSet, countries, title, *events)
 	case *out == "raw":
 		output.PrintCases(ResultSet)
 	case *out == "csv":
 		output.PrintCasesTabs(ResultSet, countries)
 	default:
-		output.CreatePlot(ResultSet, countries, title)
+		output.CreatePlot(ResultSet, countries, title, *events)
 	}
 }

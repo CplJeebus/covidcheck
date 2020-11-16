@@ -13,7 +13,7 @@ import (
 	"gonum.org/v1/plot/vg"
 )
 
-func CreatePlot(r []types.CasesRecord, countries []string, title string) {
+func CreatePlot(r []types.CasesRecord, countries []string, title string, plotEvents bool) {
 	p, err := plot.New()
 	if err != nil {
 		panic(err)
@@ -23,7 +23,7 @@ func CreatePlot(r []types.CasesRecord, countries []string, title string) {
 
 	p.Title.Text = title
 	p.Legend.Top = true
-	p.Legend.Left = false
+	p.Legend.Left = true
 	p.X.Label.Text = "Date"
 	p.X.Tick.Marker = xticks
 	p.Y.Label.Text = "Value"
@@ -34,20 +34,21 @@ func CreatePlot(r []types.CasesRecord, countries []string, title string) {
 		lines = append(lines, CreatePoints(r, strings.ToUpper(countries[c])))
 	}
 
-	var e Events
+	if !plotEvents {
+		var e Events
 
-	e.LoadEvents()
+		e.LoadEvents()
 
-	for i := range e.Event {
-		if isValidEvent(e.Event[i], r) {
-			lines = append(lines, e.Event[i].Name)
-			lines = append(lines, EventPoints(e.Event[i].Date, GetMaxPoint(r)))
+		for i := range e.Event {
+			if isValidEvent(e.Event[i], r) {
+				lines = append(lines, e.Event[i].Name+" "+e.Event[i].GeoID)
+				lines = append(lines, EventPoints(e.Event[i].Date, GetMaxPoint(r)))
+			}
 		}
 	}
-
 	_ = plotutil.AddLinePoints(p, lines...)
 
-	if err := p.Save(12*vg.Inch, 12*vg.Inch, "points.png"); err != nil {
+	if err := p.Save(24*vg.Inch, 12*vg.Inch, "points.png"); err != nil {
 		panic(err)
 	}
 }
