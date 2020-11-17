@@ -1,15 +1,19 @@
 package data
 
 import (
+	"bufio"
+	"encoding/csv"
 	"fmt"
+	"gocheck/types"
 	"io"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 )
 
 func Checkfiles() {
-	f, err := os.Stat("./data/today-cdc.json")
+	f, err := os.Stat("./data/today-ecdc.json")
 
 	if os.IsNotExist(err) {
 		GetData()
@@ -39,7 +43,7 @@ func getdataEcdc() {
 
 	defer resp.Body.Close()
 
-	out, err := os.Create("./data/today-cdc.json")
+	out, err := os.Create("./data/today-ecdc.json")
 	if err != nil {
 		fmt.Printf("%s", err)
 	}
@@ -73,4 +77,38 @@ func getdataCdc() {
 	if err != nil {
 		fmt.Printf("%s", err)
 	}
+
+	createBaseUSjsonFile()
+}
+
+func createBaseUSjsonFile() {
+	f, err := os.Open("./data/cdc-raw.csv")
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	covidRecords := make([]types.CovidRecord, 0)
+
+	var covidRecord types.CovidRecord
+
+	r := csv.NewReader(bufio.NewReader(f))
+	r.Read()
+	records, err := r.ReadAll()
+
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	for _, rec := range records {
+		fmt.Println(rec[0] + " " + rec[1] + " " + rec[5] + " " + rec[10])
+		covidRecord.DateRep = rec[0]
+		covidRecord.Cases, _ = strconv.Atoi(rec[5])
+		covidRecord.Deaths, _ = strconv.Atoi(rec[10])
+		covidRecord.GeoID = "us-" + rec[1]
+		covidRecords = append(covidRecords, covidRecord)
+	}
+
+	fmt.Println(covidRecords)
 }

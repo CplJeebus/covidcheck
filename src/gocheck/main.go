@@ -53,13 +53,13 @@ default - Creates a graph"`)
 		data.GetData()
 	}
 
-	var theRecords types.Ecdcdata
+	var theRecords types.CovidData
 
 	var ResultSet []types.CasesRecord
 
 	var title string
 
-	fbytes, e := ioutil.ReadFile("./today-go.json")
+	fbytes, e := ioutil.ReadFile("./data/today-ecdc.json")
 
 	if e != nil {
 		fmt.Printf("%s", e)
