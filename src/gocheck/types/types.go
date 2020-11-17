@@ -42,6 +42,38 @@ type Event struct {
 	GeoID string `yaml:"geoid"`
 }
 
+type States struct {
+	States []State
+}
+type State struct {
+	Rank            int    `json:"rank"`
+	State           string `json:"State"`
+	Code            string `json:"Code"`
+	Pop             int    `json:"Pop"`
+	Growth          string `json:"Growth"`
+	Pop2018         int    `json:"Pop2018"`
+	Pop2010         int    `json:"Pop2010"`
+	GrowthSince2010 string `json:"growthSince2010"`
+	Percent         string `json:"Percent"`
+	Density         string `json:"density"`
+}
+
+func (s *States) LoadStates() *States {
+	states, err := ioutil.ReadFile("./data/us-states.json")
+
+	if err != nil {
+		log.Printf("Unable to open events file %v", err)
+	}
+
+	err = yaml.Unmarshal(states, s)
+
+	if err != nil {
+		log.Fatalf("Can't parse file %v", err)
+	}
+
+	return s
+}
+
 func (e *Events) LoadEvents() *Events {
 	eventsFile, err := ioutil.ReadFile("events.yaml")
 

@@ -102,7 +102,6 @@ func createBaseUSjsonFile() {
 	}
 
 	for _, rec := range records {
-		fmt.Println(rec[0] + " " + rec[1] + " " + rec[5] + " " + rec[10])
 		covidRecord.DateRep = rec[0]
 		covidRecord.Cases, _ = strconv.Atoi(rec[5])
 		covidRecord.Deaths, _ = strconv.Atoi(rec[10])
@@ -111,4 +110,13 @@ func createBaseUSjsonFile() {
 	}
 
 	fmt.Println(covidRecords)
+}
+
+func getStatePopulation(c string) int {
+	f, err := os.Open("./data/us-states.json")
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
 }
