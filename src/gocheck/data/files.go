@@ -106,17 +106,49 @@ func createBaseUSjsonFile() {
 		covidRecord.Cases, _ = strconv.Atoi(rec[5])
 		covidRecord.Deaths, _ = strconv.Atoi(rec[10])
 		covidRecord.GeoID = "us-" + rec[1]
+		covidRecord.PopData2019 = getStatePopulation(rec[1])
 		covidRecords = append(covidRecords, covidRecord)
 	}
+	covidRecord = calculate14DayAvg(covidRecord)
+}
 
-	fmt.Println(covidRecords)
+func set14day100k (rs []types.CovidRecord(){
+	var usStates types.States
+
+	usStates.LoadStates()
+	for _, s := range usStates.States {
+		for i, r range rs {
+			if r.GeoID = "us-"+s.Code {
+				if d < 14 {
+
+				}
+			}
+		}
+	}
+
+}
+
+func calculate14Day100k(rs []types.CovidRecords, d int){
+		if d < 14 {
+			j=0
+		} else {
+			j=d-14
+		}
+		for j < d {
+
+		}
 }
 
 func getStatePopulation(c string) int {
-	f, err := os.Open("./data/us-states.json")
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+	var usStates types.States
+
+	usStates.LoadStates()
+
+	for _, state := range usStates.States {
+		if state.Code == c {
+			return state.Pop
+		}
 	}
 
+	return 1
 }

@@ -43,19 +43,20 @@ type Event struct {
 }
 
 type States struct {
-	States []State
+	States []State `json:"states"`
 }
+
 type State struct {
-	Rank            int    `json:"rank"`
-	State           string `json:"State"`
-	Code            string `json:"Code"`
-	Pop             int    `json:"Pop"`
-	Growth          string `json:"Growth"`
-	Pop2018         int    `json:"Pop2018"`
-	Pop2010         int    `json:"Pop2010"`
-	GrowthSince2010 string `json:"growthSince2010"`
-	Percent         string `json:"Percent"`
-	Density         string `json:"density"`
+	Rank            int     `json:"rank"`
+	State           string  `json:"state"`
+	Code            string  `json:"code"`
+	Pop             int     `json:"pop"`
+	Growth          string  `json:"growth"`
+	Pop2018         int64   `json:"pop2018"`
+	Pop2010         int64   `json:"pop2010"`
+	GrowthSince2010 float64 `json:"growthSince2010"`
+	Percent         string  `json:"percent"`
+	Density         string  `json:"density"`
 }
 
 func (s *States) LoadStates() *States {
@@ -65,6 +66,7 @@ func (s *States) LoadStates() *States {
 		log.Printf("Unable to open events file %v", err)
 	}
 
+	//	fmt.Println(string(states))
 	err = yaml.Unmarshal(states, s)
 
 	if err != nil {
