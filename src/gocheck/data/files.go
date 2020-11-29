@@ -3,9 +3,11 @@ package data
 import (
 	"bufio"
 	"encoding/csv"
+	"encoding/json"
 	"fmt"
 	"gocheck/types"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"strconv"
@@ -109,34 +111,60 @@ func createBaseUSjsonFile() {
 		covidRecord.PopData2019 = getStatePopulation(rec[1])
 		covidRecords = append(covidRecords, covidRecord)
 	}
-	covidRecord = calculate14DayAvg(covidRecord)
+
+	file, err := json.Marshal(set14day100k(covidRecords))
+	if err != nil {
+		fmt.Println(err)
+	}
+	err = ioutil.WriteFile("./data/today-us.json", file, 0644)
+	if err != nil {
+		fmt.Println(err)
+	}
 }
 
-func set14day100k (rs []types.CovidRecord(){
+func set14day100k(rs []types.CovidRecord) []types.CovidRecord {
 	var usStates types.States
 
+	d := int(0)
+	// We are going to make some assumtions here.
+	// Mainly that all of the records are in date order.
+	// And that all states are contiguous
 	usStates.LoadStates()
-	for _, s := range usStates.States {
-		for i, r range rs {
-			if r.GeoID = "us-"+s.Code {
-				if d < 14 {
 
-				}
+	for _, s := range usStates.States {
+		d = 0
+
+		for i, r := range rs {
+			if r.GeoID == "us-"+s.Code {
+				rs[i].C14D100K = strconv.FormatFloat(calculateRange(rs, i, d), 'f', 6, 64)
+				d++
 			}
 		}
 	}
 
+	return rs
 }
 
-func calculate14Day100k(rs []types.CovidRecords, d int){
-		if d < 14 {
-			j=0
-		} else {
-			j=d-14
-		}
-		for j < d {
+func calculateRange(rs []types.CovidRecord, index, d int) float64 {
+	var s float64
+	var si int
 
+	if d < 14 {
+		si = (index - d)
+
+		for _, p := range rs[si:index] {
+			s = (s + float64(p.Cases))
 		}
+		s = s / float64(d)
+	} else {
+		si = (index - 14)
+		for _, p := range rs[si:index] {
+			s = (s + float64(p.Cases))
+		}
+		s = s / 14
+	}
+
+	return s
 }
 
 func getStatePopulation(c string) int {
