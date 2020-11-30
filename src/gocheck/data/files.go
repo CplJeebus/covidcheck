@@ -40,6 +40,7 @@ func GetData() {
 
 func makeSingleFile() {
 	var Records types.CovidData
+
 	CovidRS := make([]types.CovidRecord, 0)
 
 	fbytesA, e := ioutil.ReadFile("./data/today-ecdc.json")
@@ -71,10 +72,12 @@ func makeSingleFile() {
 	}
 
 	Records.CovidRecords = CovidRS
+
 	file, err := json.Marshal(Records)
 	if err != nil {
 		fmt.Println(err)
 	}
+
 	err = ioutil.WriteFile("./data/today.json", file, 0644)
 	if err != nil {
 		fmt.Println(err)
@@ -141,7 +144,12 @@ func createBaseUSjsonFile() {
 	}
 
 	r := csv.NewReader(bufio.NewReader(f))
-	r.Read()
+
+	_, err = r.Read()
+	if err != nil {
+		fmt.Println(err)
+	}
+
 	records, err := r.ReadAll()
 
 	if err != nil {
@@ -152,6 +160,7 @@ func createBaseUSjsonFile() {
 	covidRecords := make(types.CovidRecords, 0)
 
 	var covidRecord types.CovidRecord
+
 	var cd types.CovidData
 
 	for _, rec := range records {
@@ -162,20 +171,22 @@ func createBaseUSjsonFile() {
 		covidRecord.PopData2019 = getStatePopulation(rec[1])
 		covidRecords = append(covidRecords, covidRecord)
 	}
-	sort.Stable(types.CovidRecords(covidRecords))
+
+	sort.Stable(covidRecords)
 	sort.SliceStable(covidRecords, func(i, j int) bool { return covidRecords[i].GeoID < covidRecords[j].GeoID })
 	covidRecords.Set14day100k()
 
 	cd.CovidRecords = covidRecords
+
 	file, err := json.Marshal(cd)
 	if err != nil {
 		fmt.Println(err)
 	}
+
 	err = ioutil.WriteFile("./data/today-us.json", file, 0644)
 	if err != nil {
 		fmt.Println(err)
 	}
-	// At this stage we have two files in similar format
 }
 
 func dumbUSdates(d string) string {

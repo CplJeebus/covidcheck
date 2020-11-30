@@ -47,7 +47,7 @@ func CreatePlot(r []types.CasesRecord, countries []string, title string, plotEve
 			}
 		}
 	}
-	_ = plotutil.AddLinePoints(p, lines...)
+	plotutil.AddLinePoints(p, lines...)
 
 	if err := p.Save(24*vg.Inch, 12*vg.Inch, "points.png"); err != nil {
 		panic(err)
@@ -79,6 +79,7 @@ func GetMaxPoint(r []types.CasesRecord) float64 {
 		if err != nil {
 			panic(err)
 		}
+
 		if q > p {
 			p = q
 		}
@@ -112,12 +113,14 @@ func CreatePoints(r []types.CasesRecord, s string) plotter.XYs {
 		if r[i].GeoID == s {
 			layout := "02/01/2006"
 			t, _ := time.Parse(layout, r[i].DateRep)
+
 			c, err := strconv.ParseFloat(r[i].Cases, 64)
-			if math.IsNaN(c) {
-				c = 0
-			}
 			if err != nil {
 				panic(err)
+			}
+
+			if math.IsNaN(c) {
+				c = 0
 			}
 
 			pt.X = float64(t.Unix())

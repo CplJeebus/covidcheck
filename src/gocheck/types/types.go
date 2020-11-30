@@ -108,8 +108,9 @@ func (rs CovidRecords) Less(i, j int) bool {
 func (rs CovidRecords) Set14day100k() CovidRecords {
 	var usStates States
 
-	d := int(0)
 	usStates.LoadStates()
+
+	d := int(0)
 
 	for _, s := range usStates.States {
 		d = 0
@@ -127,6 +128,7 @@ func (rs CovidRecords) Set14day100k() CovidRecords {
 
 func calculateRange(rs []CovidRecord, index, d int) float64 {
 	var s float64
+
 	var si int
 
 	if d < 14 {
@@ -135,6 +137,7 @@ func calculateRange(rs []CovidRecord, index, d int) float64 {
 		for _, p := range rs[si:index] {
 			s = (s + float64(p.Cases))
 		}
+
 		s = (s / float64(rs[index].PopData2019)) * 100000
 	} else {
 		si = (index - 14)

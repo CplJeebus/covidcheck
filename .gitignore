@@ -10,3 +10,4 @@ src/gonum.org/
 src/gopkg.in/
 src/rsc.io/
 !data/us-states.json
+data/cdc-raw.csv
