@@ -10,12 +10,15 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
 )
 
 func Checkfiles() {
+	// Change this so that it only checking for a single file
+	// This will be combined CDC and ECDC file
 	f, err := os.Stat("./data/today-ecdc.json")
 
 	if os.IsNotExist(err) {
@@ -34,6 +37,8 @@ func GetData() {
 	getdataEcdc()
 }
 
+// All this really does is get the raw file from the ECDC
+// Will change this to return an array.
 func getdataEcdc() {
 	dataURL := "https://opendata.ecdc.europa.eu/covid19/casedistribution/json/"
 	resp, err := http.Get(dataURL)
@@ -91,9 +96,10 @@ func createBaseUSjsonFile() {
 		os.Exit(1)
 	}
 
-	covidRecords := make([]types.CovidRecord, 0)
+	covidRecords := make(types.CovidRecords, 0)
 
 	var covidRecord types.CovidRecord
+	var cd types.CovidData
 
 	r := csv.NewReader(bufio.NewReader(f))
 	r.Read()
@@ -112,9 +118,10 @@ func createBaseUSjsonFile() {
 		covidRecord.PopData2019 = getStatePopulation(rec[1])
 		covidRecords = append(covidRecords, covidRecord)
 	}
+	sort.Sort(types.CovidRecords(covidRecords))
+	covidRecords.Set14day100k()
 
-	var cd types.CovidData
-	cd.CovidRecords = set14day100k(covidRecords)
+	cd.CovidRecords = covidRecords
 	file, err := json.Marshal(cd)
 	if err != nil {
 		fmt.Println(err)
@@ -123,56 +130,13 @@ func createBaseUSjsonFile() {
 	if err != nil {
 		fmt.Println(err)
 	}
-}
-
-func set14day100k(rs []types.CovidRecord) []types.CovidRecord {
-	var usStates types.States
-
-	d := int(0)
-	// We are going to make some assumtions here.
-	// Mainly that all of the records are in date order.
-	// And that all states are contiguous
-	usStates.LoadStates()
-
-	for _, s := range usStates.States {
-		d = 0
-
-		for i, r := range rs {
-			if r.GeoID == "US-"+s.Code {
-				rs[i].C14D100K = strconv.FormatFloat(calculateRange(rs, i, d), 'f', 6, 64)
-				d++
-			}
-		}
-	}
-
-	return rs
+	// At this stage we have two files in similar format
 }
 
 func dumbUSdates(d string) string {
 	s := strings.Split(d, "/")
+
 	return s[1] + "/" + s[0] + "/" + s[2]
-}
-
-func calculateRange(rs []types.CovidRecord, index, d int) float64 {
-	var s float64
-	var si int
-
-	if d < 14 {
-		si = (index - d)
-
-		for _, p := range rs[si:index] {
-			s = (s + float64(p.Cases))
-		}
-		s = s / float64(d)
-	} else {
-		si = (index - 14)
-		for _, p := range rs[si:index] {
-			s = (s + float64(p.Cases))
-		}
-		s = s / 14
-	}
-
-	return s
 }
 
 func getStatePopulation(c string) int {

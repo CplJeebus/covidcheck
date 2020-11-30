@@ -3,14 +3,17 @@ package types
 import (
 	"io/ioutil"
 	"log"
+	"strconv"
+	"time"
 
 	yaml "gopkg.in/yaml.v2"
 )
 
 type CovidData struct {
-	CovidRecords []CovidRecord `json:"records"`
+	CovidRecords CovidRecords `json:"records"`
 }
 
+type CovidRecords []CovidRecord
 type CovidRecord struct {
 	DateRep                 string `json:"dateRep"`
 	Day                     string `json:"day"`
@@ -90,4 +93,68 @@ func (e *Events) LoadEvents() *Events {
 	}
 
 	return e
+}
+
+func (rs CovidRecords) Len() int      { return len(rs) }
+func (rs CovidRecords) Swap(i, j int) { rs[i], rs[j] = rs[j], rs[i] }
+func (rs CovidRecords) Less(i, j int) bool {
+	layout := "02/01/2006"
+	a, _ := time.Parse(layout, rs[i].DateRep)
+	b, _ := time.Parse(layout, rs[j].DateRep)
+
+	if a.Before(b) {
+		return false
+	}
+
+	if a.Before(b) {
+		return true
+	}
+
+	return rs[i].GeoID < rs[j].GeoID
+}
+
+// think this needs to be moved into types package.
+func (rs CovidRecords) Set14day100k() CovidRecords {
+	var usStates States
+
+	d := int(0)
+	// We are going to make some assumtions here.
+	// Mainly that all of the records are in date order.
+	// And that all states are contiguous
+	usStates.LoadStates()
+
+	for _, s := range usStates.States {
+		d = 0
+
+		for i, r := range rs {
+			if r.GeoID == "US-"+s.Code {
+				rs[i].C14D100K = strconv.FormatFloat(calculateRange(rs, i, d), 'f', 6, 64)
+				d++
+			}
+		}
+	}
+
+	return rs
+}
+
+func calculateRange(rs []CovidRecord, index, d int) float64 {
+	var s float64
+	var si int
+
+	if d < 14 {
+		si = (index - d)
+
+		for _, p := range rs[si:index] {
+			s = (s + float64(p.Cases))
+		}
+		s = s / float64(d)
+	} else {
+		si = (index - 14)
+		for _, p := range rs[si:index] {
+			s = (s + float64(p.Cases))
+		}
+		s = s / 14
+	}
+
+	return s
 }
