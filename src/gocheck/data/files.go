@@ -35,6 +35,50 @@ func Checkfiles() {
 func GetData() {
 	getdataCdc()
 	getdataEcdc()
+	makeSingleFile()
+}
+
+func makeSingleFile() {
+	var Records types.CovidData
+	CovidRS := make([]types.CovidRecord, 0)
+
+	fbytesA, e := ioutil.ReadFile("./data/today-ecdc.json")
+	if e != nil {
+		fmt.Printf("%s", e)
+	}
+
+	e = json.Unmarshal(fbytesA, &Records)
+	if e != nil {
+		fmt.Printf("%s", e)
+	}
+
+	for _, c := range Records.CovidRecords {
+		CovidRS = append(CovidRS, c)
+	}
+
+	fbytesB, e := ioutil.ReadFile("./data/today-us.json")
+	if e != nil {
+		fmt.Printf("%s", e)
+	}
+
+	e = json.Unmarshal(fbytesB, &Records)
+	if e != nil {
+		fmt.Printf("%s", e)
+	}
+
+	for _, c := range Records.CovidRecords {
+		CovidRS = append(CovidRS, c)
+	}
+
+	Records.CovidRecords = CovidRS
+	file, err := json.Marshal(Records)
+	if err != nil {
+		fmt.Println(err)
+	}
+	err = ioutil.WriteFile("./data/today.json", file, 0644)
+	if err != nil {
+		fmt.Println(err)
+	}
 }
 
 // All this really does is get the raw file from the ECDC
@@ -96,11 +140,6 @@ func createBaseUSjsonFile() {
 		os.Exit(1)
 	}
 
-	covidRecords := make(types.CovidRecords, 0)
-
-	var covidRecord types.CovidRecord
-	var cd types.CovidData
-
 	r := csv.NewReader(bufio.NewReader(f))
 	r.Read()
 	records, err := r.ReadAll()
@@ -110,6 +149,11 @@ func createBaseUSjsonFile() {
 		os.Exit(1)
 	}
 
+	covidRecords := make(types.CovidRecords, 0)
+
+	var covidRecord types.CovidRecord
+	var cd types.CovidData
+
 	for _, rec := range records {
 		covidRecord.DateRep = dumbUSdates(rec[0])
 		covidRecord.Cases, _ = strconv.Atoi(rec[5])
@@ -118,7 +162,8 @@ func createBaseUSjsonFile() {
 		covidRecord.PopData2019 = getStatePopulation(rec[1])
 		covidRecords = append(covidRecords, covidRecord)
 	}
-	sort.Sort(types.CovidRecords(covidRecords))
+	sort.Stable(types.CovidRecords(covidRecords))
+	sort.SliceStable(covidRecords, func(i, j int) bool { return covidRecords[i].GeoID < covidRecords[j].GeoID })
 	covidRecords.Set14day100k()
 
 	cd.CovidRecords = covidRecords

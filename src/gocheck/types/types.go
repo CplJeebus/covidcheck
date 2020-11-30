@@ -102,25 +102,13 @@ func (rs CovidRecords) Less(i, j int) bool {
 	a, _ := time.Parse(layout, rs[i].DateRep)
 	b, _ := time.Parse(layout, rs[j].DateRep)
 
-	if a.Before(b) {
-		return false
-	}
-
-	if a.Before(b) {
-		return true
-	}
-
-	return rs[i].GeoID < rs[j].GeoID
+	return b.Before(a)
 }
 
-// think this needs to be moved into types package.
 func (rs CovidRecords) Set14day100k() CovidRecords {
 	var usStates States
 
 	d := int(0)
-	// We are going to make some assumtions here.
-	// Mainly that all of the records are in date order.
-	// And that all states are contiguous
 	usStates.LoadStates()
 
 	for _, s := range usStates.States {
@@ -147,13 +135,13 @@ func calculateRange(rs []CovidRecord, index, d int) float64 {
 		for _, p := range rs[si:index] {
 			s = (s + float64(p.Cases))
 		}
-		s = s / float64(d)
+		s = (s / (float64(d+1) * float64(rs[index].PopData2019))) * 100000
 	} else {
 		si = (index - 14)
 		for _, p := range rs[si:index] {
 			s = (s + float64(p.Cases))
 		}
-		s = s / 14
+		s = (s / (14 * float64(rs[index].PopData2019))) * 100000
 	}
 
 	return s

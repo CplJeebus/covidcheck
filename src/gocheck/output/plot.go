@@ -1,9 +1,9 @@
 package output
 
 import (
-	"fmt"
 	"gocheck/types"
 	. "gocheck/types"
+	"math"
 	"strconv"
 	"strings"
 	"time"
@@ -105,7 +105,6 @@ func EventPoints(d string, mx float64) plotter.XYs {
 
 func CreatePoints(r []types.CasesRecord, s string) plotter.XYs {
 	pts := make([]plotter.XY, 0)
-	fmt.Println(r)
 
 	var pt plotter.XY
 
@@ -114,7 +113,9 @@ func CreatePoints(r []types.CasesRecord, s string) plotter.XYs {
 			layout := "02/01/2006"
 			t, _ := time.Parse(layout, r[i].DateRep)
 			c, err := strconv.ParseFloat(r[i].Cases, 64)
-
+			if math.IsNaN(c) {
+				c = 0
+			}
 			if err != nil {
 				panic(err)
 			}

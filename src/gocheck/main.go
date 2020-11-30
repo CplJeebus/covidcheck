@@ -53,42 +53,21 @@ default - Creates a graph"`)
 		data.GetData()
 	}
 
-	var Records types.CovidData
 	var theRecords types.CovidData
-	CovidRS := make([]types.CovidRecord, 0)
 	var ResultSet []types.CasesRecord
 	var title string
 
 	// I hate this two file solution!!
 	// Once I get the MVP need a big refactor.
-	fbytesA, e := ioutil.ReadFile("./data/today-ecdc.json")
+	fbytes, e := ioutil.ReadFile("./data/today.json")
 	if e != nil {
 		fmt.Printf("%s", e)
 	}
 
-	e = json.Unmarshal(fbytesA, &Records)
+	e = json.Unmarshal(fbytes, &theRecords)
 	if e != nil {
 		fmt.Printf("%s", e)
 	}
-
-	for _, c := range Records.CovidRecords {
-		CovidRS = append(CovidRS, c)
-	}
-
-	fbytesB, e := ioutil.ReadFile("./data/today-us.json")
-	if e != nil {
-		fmt.Printf("%s", e)
-	}
-	e = json.Unmarshal(fbytesB, &Records)
-	if e != nil {
-		fmt.Printf("%s", e)
-	}
-
-	for _, c := range Records.CovidRecords {
-		CovidRS = append(CovidRS, c)
-	}
-
-	theRecords.CovidRecords = CovidRS
 
 	switch {
 	case *deaths:
