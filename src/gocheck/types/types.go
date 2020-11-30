@@ -135,13 +135,13 @@ func calculateRange(rs []CovidRecord, index, d int) float64 {
 		for _, p := range rs[si:index] {
 			s = (s + float64(p.Cases))
 		}
-		s = (s / (float64(d+1) * float64(rs[index].PopData2019))) * 100000
+		s = (s / float64(rs[index].PopData2019)) * 100000
 	} else {
 		si = (index - 14)
 		for _, p := range rs[si:index] {
 			s = (s + float64(p.Cases))
 		}
-		s = (s / (14 * float64(rs[index].PopData2019))) * 100000
+		s = (s / float64(rs[index].PopData2019)) * 100000
 	}
 
 	return s
