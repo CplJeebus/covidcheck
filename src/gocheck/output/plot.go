@@ -1,6 +1,7 @@
 package output
 
 import (
+	"fmt"
 	"gocheck/types"
 	. "gocheck/types"
 	"strconv"
@@ -104,6 +105,7 @@ func EventPoints(d string, mx float64) plotter.XYs {
 
 func CreatePoints(r []types.CasesRecord, s string) plotter.XYs {
 	pts := make([]plotter.XY, 0)
+	fmt.Println(r)
 
 	var pt plotter.XY
 

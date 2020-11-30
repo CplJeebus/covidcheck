@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -104,15 +105,17 @@ func createBaseUSjsonFile() {
 	}
 
 	for _, rec := range records {
-		covidRecord.DateRep = rec[0]
+		covidRecord.DateRep = dumbUSdates(rec[0])
 		covidRecord.Cases, _ = strconv.Atoi(rec[5])
 		covidRecord.Deaths, _ = strconv.Atoi(rec[10])
-		covidRecord.GeoID = "us-" + rec[1]
+		covidRecord.GeoID = "US-" + rec[1]
 		covidRecord.PopData2019 = getStatePopulation(rec[1])
 		covidRecords = append(covidRecords, covidRecord)
 	}
 
-	file, err := json.Marshal(set14day100k(covidRecords))
+	var cd types.CovidData
+	cd.CovidRecords = set14day100k(covidRecords)
+	file, err := json.Marshal(cd)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -135,7 +138,7 @@ func set14day100k(rs []types.CovidRecord) []types.CovidRecord {
 		d = 0
 
 		for i, r := range rs {
-			if r.GeoID == "us-"+s.Code {
+			if r.GeoID == "US-"+s.Code {
 				rs[i].C14D100K = strconv.FormatFloat(calculateRange(rs, i, d), 'f', 6, 64)
 				d++
 			}
@@ -143,6 +146,11 @@ func set14day100k(rs []types.CovidRecord) []types.CovidRecord {
 	}
 
 	return rs
+}
+
+func dumbUSdates(d string) string {
+	s := strings.Split(d, "/")
+	return s[1] + "/" + s[0] + "/" + s[2]
 }
 
 func calculateRange(rs []types.CovidRecord, index, d int) float64 {
