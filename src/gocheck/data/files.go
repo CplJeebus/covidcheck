@@ -40,8 +40,7 @@ func GetData() {
 
 func makeSingleFile() {
 	var Records types.CovidData
-
-	CovidRS := make([]types.CovidRecord, 0)
+	var usRecords types.CovidData
 
 	fbytesA, e := ioutil.ReadFile("./data/today-ecdc.json")
 	if e != nil {
@@ -53,25 +52,17 @@ func makeSingleFile() {
 		fmt.Printf("%s", e)
 	}
 
-	for _, c := range Records.CovidRecords {
-		CovidRS = append(CovidRS, c)
-	}
-
 	fbytesB, e := ioutil.ReadFile("./data/today-us.json")
 	if e != nil {
 		fmt.Printf("%s", e)
 	}
 
-	e = json.Unmarshal(fbytesB, &Records)
+	e = json.Unmarshal(fbytesB, &usRecords)
 	if e != nil {
 		fmt.Printf("%s", e)
 	}
 
-	for _, c := range Records.CovidRecords {
-		CovidRS = append(CovidRS, c)
-	}
-
-	Records.CovidRecords = CovidRS
+	Records.CovidRecords = append(Records.CovidRecords, usRecords.CovidRecords...)
 
 	file, err := json.Marshal(Records)
 	if err != nil {
