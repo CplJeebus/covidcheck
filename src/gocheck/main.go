@@ -45,7 +45,7 @@ default - Creates a graph"`)
 		plot - Creates a graph "points.png" in the current directory
 		default - Creates a graph
 
-	default get average number of new cases per 100K of population for the last 14days.
+	default get cumulative number of new cases per 100K of population for the last 14days.
 	A list of country codes must be supplied e.g IE DE ...`)
 	}
 
@@ -54,11 +54,7 @@ default - Creates a graph"`)
 	}
 
 	var theRecords types.CovidData
-	var ResultSet []types.CasesRecord
-	var title string
 
-	// I hate this two file solution!!
-	// Once I get the MVP need a big refactor.
 	fbytes, e := ioutil.ReadFile("./data/today.json")
 	if e != nil {
 		fmt.Printf("%s", e)
@@ -69,6 +65,8 @@ default - Creates a graph"`)
 		fmt.Printf("%s", e)
 	}
 
+	var ResultSet []types.CasesRecord
+	var title string
 	switch {
 	case *deaths:
 		ResultSet = records.GetRecords(*number, countries, theRecords, "deaths")

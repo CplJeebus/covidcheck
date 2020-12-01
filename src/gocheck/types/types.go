@@ -127,25 +127,14 @@ func (rs CovidRecords) Set14day100k() CovidRecords {
 }
 
 func calculateRange(rs []CovidRecord, index, d int) float64 {
-	var s float64
+	s := float64(0)
 
-	var si int
-
-	if d < 14 {
-		si = (index - d)
-
-		for _, p := range rs[si:index] {
-			s = (s + float64(p.Cases))
-		}
-
-		s = (s / float64(rs[index].PopData2019)) * 100000
-	} else {
-		si = (index - 14)
-		for _, p := range rs[si:index] {
-			s = (s + float64(p.Cases))
-		}
-		s = (s / float64(rs[index].PopData2019)) * 100000
+	var se int
+	se = (index + 14)
+	for _, p := range rs[index:se] {
+		s = (s + float64(p.Cases))
 	}
+	s = (s / float64(rs[index].PopData2019)) * 100000
 
 	return s
 }

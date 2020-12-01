@@ -19,7 +19,7 @@ import (
 func Checkfiles() {
 	// Change this so that it only checking for a single file
 	// This will be combined CDC and ECDC file
-	f, err := os.Stat("./data/today-ecdc.json")
+	f, err := os.Stat("./data/today.json")
 
 	if os.IsNotExist(err) {
 		GetData()
@@ -78,7 +78,7 @@ func makeSingleFile() {
 		fmt.Println(err)
 	}
 
-	err = ioutil.WriteFile("./data/today.json", file, 0644)
+	err = ioutil.WriteFile("./data/today.json", file, 0600)
 	if err != nil {
 		fmt.Println(err)
 	}
