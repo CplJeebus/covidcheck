@@ -160,8 +160,8 @@ Either way the point of this exercise was to practice `go` and the fact that the
 
 # Todo
 
-Where to start! Here I suppose;
-## Functionality 
+Where to start! Here I suppose.
+## Functionalitey 
   * See if I can add smoothing functions to the -dm and -cm flags. `us` data is especially bad seems the CDC does not work Sundays! 
   * Fiddle with the scales of the graphs. Would like to do a lot with the graphs might be the next big change
   * Allow different file names for the output plots.
@@ -170,6 +170,7 @@ Where to start! Here I suppose;
 
 ## Codey stuff
   * Refactor 
+  * Why did I make all of the data types strings 🤦🏽‍♀️
   * To much messing around with files 
   * Clean up the flag stuff. 
   * figure out why messing with the CDC file is so slow 
@@ -182,4 +183,6 @@ Where to start! Here I suppose;
 ### Shell Script
 Deprecated, will leave the script there for ~the craic~ interest.
 
+## Why did I make all the data types `strings` 🤦🏽‍♀️
+So long ago I used to do a lot (moderate amount) of coding in `C` I mostly working with unstructured data, or semi-unknown inputs. So rather than cast at point of input I just had a habit of cast every thing as a `*char` or even `**char` and then write functions to _manage_ and sanitize this data. This was mostly just a function of my bad coding but also lack of standards all around me. I remember when I first learnt some rudimentary coding I was a physics undergrad. My CS'ish lecture was horrified when my code for as an exa,ple _asl_ was `scanf("age: %s sex: %s location: %s")`. I suspect that he wanted  `scanf("age: %d sex: %b location: %s")`, but my way of thinking was accept all inputs and then convert, sanitize etc. So this is what I did here. Now it does mean I have to have conversions all over the place, but I can live with that! Can you 👉?  
 
