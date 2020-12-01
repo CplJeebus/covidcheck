@@ -6,23 +6,12 @@ Simple app to track various covid-19 stats
 
 ### Refresh\Init data 
 
-Script Version
-`check-ecdc.sh f` 
-
-Go Version
 `check-ecdc -f`
 This has been changed and will now refresh the data file if it is older than 8 hours
 
 
-### Get 14 day average of new cases per 100k of population
+### Get 14 day comulative of new cases per 100k of population
 
-Shell version
-
-`check-ecdc.sh [Number of Days] [Country 1] [Country 2] [Country.....` 
-
-`./check-ecdc.sh 5 IE DE` 
-
-Go Version
 `./check-ecdc -n [Number of Days] [Country 1] [Country 2] [Country.....`
 
 ```
@@ -41,9 +30,7 @@ Go Version
 ### Get new cases in the previous _n_ days  
 
 
-`check-ecdc.sh n [Number of Days] [Country 1] [Country 2] [Country.....` 
-
-`./check-ecdc.sh -n 5 IE DE` 
+`./check-ecdc -n [Number of Days] -c [Country 1] [Country 2] [Country.....`
 
 ```
 37	IE	13/08/2020
@@ -58,18 +45,8 @@ Go Version
 555	DE	09/08/2020
 ```
 
-Go Version
-`./check-ecdc -n [Number of Days] -c [Country 1] [Country 2] [Country.....`
-
-
 ### Get deaths in the previous _n_ days  
 
-
-`check-ecdc.sh d [Number of Days] [Country 1] [Country 2] [Country.....` 
-
-`./check-ecdc.sh d 5 IE DE` 
-
-Go Version
 `./check-ecdc -n [Number of Days] -d [Country 1] [Country 2] [Country.....`
 
 
@@ -85,8 +62,6 @@ Go Version
 1	DE	10/08/2020
 1	DE	09/08/2020
 ```
-
-## Go Version Only
 
 ### Get new deaths per million per day in the previous _n_ days  
 
@@ -166,28 +141,45 @@ Events are added by default add `-xe` to toggle off.
 
 [Here](https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide) basically it is the daily update from the European Centre for Disease Prevention and Control.
 
+For US states we get the data from the [CDC](https://data.cdc.gov/api/views/9mfq-cb36/rows.csv?accessType=DOWNLOAD), but this a big *pain!* . This site seems to have the most comprehensive data in consistent format. Unlike the ECDC this data is a bit difficult to handle. The ECDC data comes in a single consistent file, that is updated daily. CDC data seems to be updated inconsistently (no covid on the weekends!) And this is different state by state. Also one of the key data points for the E CDC is _the cumulative new cases over 14 days per 100K of population_ as defined [here](https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide). 
+
+```
+The formula to calculate the 14-day cumulative number of reported COVID-19 cases per 100 000 population is  (New cases over 14 day period)/Population)*100 000.
+```
+
+So to compare like with like I need to calculate this for the US states, and have created a `method` to do so.  However very few US states report data this way so it is hard to validate my calculations with these States. Long story I have a sore head!! And I’m not convinced that the data is correct, but it is _truthy_ and that seems to be good enough these days.  
+
+Either way the point of this exercise was to practice `go` and the fact that there is no functional national government and no two US states can seemingly agree as to whether or not to festoon their health advice sites with adverts or not, never mind give good data, means I’m learning a lot! 
+
 ### Some strangness in the data 
 
 * For some reason some of the data points are weird for instance negative numbers 
 * The Country code are reasonably consistent with [ISO 3166](https://www.iban.com/country-codes) however there are some funnies for example `UK` rather than `GB`.
-`
+* See rant above about the US.
 
 
 # Todo
 
-### Shell Script
-~Probably won't do much more but;
-  * A `usage` function would be nice
-  * Better arg handling
-  * Prereq check for things like `jq`~
-
-### Go Version
 Where to start! Here I suppose;
-  * Output validation. This might require some research to find the background, but app should filter nonsensical output. _"-48" deaths UK._ I think we have a bigger problem than covid!
-  * Fiddle with the scales of the graphs. 
-  * Allow different file names for the output plots.
+## Functionality 
   * See if I can add smoothing functions to the -dm and -cm flags. `us` data is especially bad seems the CDC does not work Sundays! 
+  * Fiddle with the scales of the graphs. Would like to do a lot with the graphs might be the next big change
+  * Allow different file names for the output plots.
   * Some cross platform way to open the graphs automatically.
-  * Have added functionality to display key events by default, you should be able to toggle this. -- DONE
+  * Containerize this and add a front end?? 
+
+## Codey stuff
+  * Refactor 
+  * To much messing around with files 
+  * Clean up the flag stuff. 
+  * figure out why messing with the CDC file is so slow 
+  * Maybe insert the lot into a DB or key value store.  
+    - Can mess with SQLlite locally. 
+    - Not sure about a KV store 
+    - This is a learning exercise.
+
+
+### Shell Script
+Deprecated, will leave the script there for ~the craic~ interest.
 
 
