@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-func GetRecords(number int, countries []string, theRecords types.Ecdcdata, stat string) []types.CasesRecord {
+func GetRecords(number int, countries []string, theRecords types.CovidData, stat string) []types.CasesRecord {
 	var j int
 
 	var data string
@@ -18,20 +18,20 @@ func GetRecords(number int, countries []string, theRecords types.Ecdcdata, stat 
 	if len(countries) != 0 {
 		for p := range countries {
 			j = 0
-			for i := range theRecords.Records {
+			for i := range theRecords.CovidRecords {
 				if j < number {
-					if theRecords.Records[i].GeoID == strings.ToUpper(countries[p]) {
+					if theRecords.CovidRecords[i].GeoID == strings.ToUpper(countries[p]) {
 						switch {
 						case stat == "deaths":
-							data = strconv.Itoa(theRecords.Records[i].Deaths)
+							data = strconv.Itoa(theRecords.CovidRecords[i].Deaths)
 						case stat == "cases":
-							data = strconv.Itoa(theRecords.Records[i].Cases)
+							data = strconv.Itoa(theRecords.CovidRecords[i].Cases)
 						case stat == "casespermillion":
-							data = StatsPerMillion(theRecords.Records[i].Cases, theRecords.Records[i].PopData2019)
+							data = StatsPerMillion(theRecords.CovidRecords[i].Cases, theRecords.CovidRecords[i].PopData2019)
 						case stat == "deathspermillion":
-							data = StatsPerMillion(theRecords.Records[i].Deaths, theRecords.Records[i].PopData2019)
+							data = StatsPerMillion(theRecords.CovidRecords[i].Deaths, theRecords.CovidRecords[i].PopData2019)
 						default:
-							data = theRecords.Records[i].C14D100K
+							data = theRecords.CovidRecords[i].C14D100K
 						}
 
 						if s, _ := strconv.ParseFloat(data, 64); s < 0 {
@@ -39,8 +39,8 @@ func GetRecords(number int, countries []string, theRecords types.Ecdcdata, stat 
 						}
 
 						result.Cases = data
-						result.GeoID = theRecords.Records[i].GeoID
-						result.DateRep = theRecords.Records[i].DateRep
+						result.GeoID = theRecords.CovidRecords[i].GeoID
+						result.DateRep = theRecords.CovidRecords[i].DateRep
 						ResultSet = append(ResultSet, result)
 						j++
 					}

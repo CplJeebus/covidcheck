@@ -3,25 +3,30 @@ package types
 import (
 	"io/ioutil"
 	"log"
+	"strconv"
+	"time"
 
 	yaml "gopkg.in/yaml.v2"
 )
 
-type Ecdcdata struct {
-	Records []struct {
-		DateRep                 string `json:"dateRep"`
-		Day                     string `json:"day"`
-		Month                   string `json:"month"`
-		Year                    string `json:"year"`
-		Cases                   int    `json:"cases"`
-		Deaths                  int    `json:"deaths"`
-		CountriesAndTerritories string `json:"countriesAndTerritories"`
-		GeoID                   string `json:"geoId"`
-		CountryterritoryCode    string `json:"countryterritoryCode"`
-		PopData2019             int    `json:"popData2019"`
-		ContinentExp            string `json:"continentExp"`
-		C14D100K                string `json:"Cumulative_number_for_14_days_of_COVID-19_cases_per_100000"`
-	} `json:"records"`
+type CovidData struct {
+	CovidRecords CovidRecords `json:"records"`
+}
+
+type CovidRecords []CovidRecord
+type CovidRecord struct {
+	DateRep                 string `json:"dateRep"`
+	Day                     string `json:"day"`
+	Month                   string `json:"month"`
+	Year                    string `json:"year"`
+	Cases                   int    `json:"cases"`
+	Deaths                  int    `json:"deaths"`
+	CountriesAndTerritories string `json:"countriesAndTerritories"`
+	GeoID                   string `json:"geoId"`
+	CountryterritoryCode    string `json:"countryterritoryCode"`
+	PopData2019             int    `json:"popData2019"`
+	ContinentExp            string `json:"continentExp"`
+	C14D100K                string `json:"Cumulative_number_for_14_days_of_COVID-19_cases_per_100000"`
 }
 
 type CasesRecord struct {
@@ -40,6 +45,40 @@ type Event struct {
 	GeoID string `yaml:"geoid"`
 }
 
+type States struct {
+	States []State `json:"states"`
+}
+
+type State struct {
+	Rank            int     `json:"rank"`
+	State           string  `json:"state"`
+	Code            string  `json:"code"`
+	Pop             int     `json:"pop"`
+	Growth          string  `json:"growth"`
+	Pop2018         int64   `json:"pop2018"`
+	Pop2010         int64   `json:"pop2010"`
+	GrowthSince2010 float64 `json:"growthSince2010"`
+	Percent         string  `json:"percent"`
+	Density         string  `json:"density"`
+}
+
+func (s *States) LoadStates() *States {
+	states, err := ioutil.ReadFile("./data/us-states.json")
+
+	if err != nil {
+		log.Printf("Unable to open events file %v", err)
+	}
+
+	//	fmt.Println(string(states))
+	err = yaml.Unmarshal(states, s)
+
+	if err != nil {
+		log.Fatalf("Can't parse file %v", err)
+	}
+
+	return s
+}
+
 func (e *Events) LoadEvents() *Events {
 	eventsFile, err := ioutil.ReadFile("events.yaml")
 
@@ -54,4 +93,48 @@ func (e *Events) LoadEvents() *Events {
 	}
 
 	return e
+}
+
+func (rs CovidRecords) Len() int      { return len(rs) }
+func (rs CovidRecords) Swap(i, j int) { rs[i], rs[j] = rs[j], rs[i] }
+func (rs CovidRecords) Less(i, j int) bool {
+	layout := "02/01/2006"
+	a, _ := time.Parse(layout, rs[i].DateRep)
+	b, _ := time.Parse(layout, rs[j].DateRep)
+
+	return b.Before(a)
+}
+
+func (rs CovidRecords) Set14day100k() CovidRecords {
+	var usStates States
+
+	usStates.LoadStates()
+
+	d := int(0)
+
+	for _, s := range usStates.States {
+		d = 0
+
+		for i, r := range rs {
+			if r.GeoID == "US-"+s.Code {
+				rs[i].C14D100K = strconv.FormatFloat(calculateRange(rs, i, d), 'f', 6, 64)
+				d++
+			}
+		}
+	}
+
+	return rs
+}
+
+func calculateRange(rs []CovidRecord, index, d int) float64 {
+	s := float64(0)
+
+	var se int
+	se = (index + 14)
+	for _, p := range rs[index:se] {
+		s = (s + float64(p.Cases))
+	}
+	s = (s / float64(rs[index].PopData2019)) * 100000
+
+	return s
 }

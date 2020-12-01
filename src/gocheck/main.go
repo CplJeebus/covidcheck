@@ -4,18 +4,15 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"gocheck/data"
 	"gocheck/output"
 	"gocheck/records"
 	"gocheck/types"
-	"io"
 	"io/ioutil"
-	"net/http"
-	"os"
-	"time"
 )
 
 func main() {
-	checkfile()
+	data.Checkfiles()
 
 	number := flag.Int("n", 5, "number of records to return")
 	refresh := flag.Bool("f", false, "get updated data file from the ECDC")
@@ -48,22 +45,17 @@ default - Creates a graph"`)
 		plot - Creates a graph "points.png" in the current directory
 		default - Creates a graph
 
-	default get average number of new cases per 100K of population for the last 14days.
+	default get cumulative number of new cases per 100K of population for the last 14days.
 	A list of country codes must be supplied e.g IE DE ...`)
 	}
 
 	if *refresh {
-		getdata()
+		data.GetData()
 	}
 
-	var theRecords types.Ecdcdata
+	var theRecords types.CovidData
 
-	var ResultSet []types.CasesRecord
-
-	var title string
-
-	fbytes, e := ioutil.ReadFile("./today-go.json")
-
+	fbytes, e := ioutil.ReadFile("./data/today.json")
 	if e != nil {
 		fmt.Printf("%s", e)
 	}
@@ -73,6 +65,8 @@ default - Creates a graph"`)
 		fmt.Printf("%s", e)
 	}
 
+	var ResultSet []types.CasesRecord
+	var title string
 	switch {
 	case *deaths:
 		ResultSet = records.GetRecords(*number, countries, theRecords, "deaths")
@@ -100,43 +94,5 @@ default - Creates a graph"`)
 		output.PrintCasesTabs(ResultSet, countries)
 	default:
 		output.CreatePlot(ResultSet, countries, title, *events)
-	}
-}
-
-func checkfile() {
-	f, err := os.Stat("./today-go.json")
-	created := f.ModTime()
-
-	if time.Since(created) > 8*time.Hour {
-		fmt.Println("Stale file")
-		getdata()
-	}
-
-	if os.IsNotExist(err) {
-		getdata()
-	}
-}
-
-func getdata() {
-	dataURL := "https://opendata.ecdc.europa.eu/covid19/casedistribution/json/"
-	resp, err := http.Get(dataURL)
-
-	if err != nil {
-		fmt.Printf("%s", err)
-	}
-
-	fmt.Println("Getting latest file")
-
-	defer resp.Body.Close()
-
-	out, err := os.Create("./today-go.json")
-	if err != nil {
-		fmt.Printf("%s", err)
-	}
-	defer out.Close()
-
-	_, err = io.Copy(out, resp.Body)
-	if err != nil {
-		fmt.Printf("%s", err)
 	}
 }

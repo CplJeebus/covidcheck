@@ -9,3 +9,5 @@ src/golang.org/
 src/gonum.org/
 src/gopkg.in/
 src/rsc.io/
+cdc-raw.csv
+!data/us-states.json
