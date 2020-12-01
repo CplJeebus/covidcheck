@@ -1,7 +1,6 @@
 package output
 
 import (
-	"gocheck/types"
 	. "gocheck/types"
 	"math"
 	"strconv"
@@ -14,7 +13,7 @@ import (
 	"gonum.org/v1/plot/vg"
 )
 
-func CreatePlot(r []types.CasesRecord, countries []string, title string, plotEvents bool) {
+func CreatePlot(r []CasesRecord, countries []string, title string, plotEvents bool) {
 	p, err := plot.New()
 	if err != nil {
 		panic(err)
@@ -54,13 +53,12 @@ func CreatePlot(r []types.CasesRecord, countries []string, title string, plotEve
 	}
 }
 
-func isValidEvent(e Event, r []types.CasesRecord) bool {
-	layout := "02/01/2006"
+func isValidEvent(e Event, r []CasesRecord) bool {
 
-	d, _ := time.Parse(layout, e.Date)
+	d, _ := time.Parse(DateLayout, e.Date)
 
 	for i := range r {
-		t, _ := time.Parse(layout, r[i].DateRep)
+		t, _ := time.Parse(DateLayout, r[i].DateRep)
 		if d.After(t) && (r[i].GeoID == strings.ToUpper(e.GeoID)) {
 			return true
 		}
@@ -69,13 +67,12 @@ func isValidEvent(e Event, r []types.CasesRecord) bool {
 	return false
 }
 
-func GetMaxPoint(r []types.CasesRecord) float64 {
+func GetMaxPoint(r []CasesRecord) float64 {
 	var p float64
 	p = 0
 
 	for i := range r {
 		q, err := strconv.ParseFloat(r[i].Cases, 64)
-
 		if err != nil {
 			panic(err)
 		}
@@ -93,8 +90,7 @@ func EventPoints(d string, mx float64) plotter.XYs {
 
 	var pt plotter.XY
 
-	layout := "02/01/2006"
-	t, _ := time.Parse(layout, d)
+	t, _ := time.Parse(DateLayout, d)
 	pt.X = float64(t.Unix())
 	pt.Y = 0
 	pts = append(pts, pt)
@@ -104,15 +100,14 @@ func EventPoints(d string, mx float64) plotter.XYs {
 	return pts
 }
 
-func CreatePoints(r []types.CasesRecord, s string) plotter.XYs {
+func CreatePoints(r []CasesRecord, s string) plotter.XYs {
 	pts := make([]plotter.XY, 0)
 
 	var pt plotter.XY
 
 	for i := range r {
 		if r[i].GeoID == s {
-			layout := "02/01/2006"
-			t, _ := time.Parse(layout, r[i].DateRep)
+			t, _ := time.Parse(DateLayout, r[i].DateRep)
 
 			c, err := strconv.ParseFloat(r[i].Cases, 64)
 			if err != nil {
