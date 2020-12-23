@@ -1,3 +1,11 @@
+# *NOOOOO!!* 
+
+The ECDC have changed the format of their data file breaking the project. However using the CDC data will still work `us-xx` 
+I think this is Karma for me dissing this CDC 🤔
+
+Will try and figure out a fix. 
+
+
 # covidcheck
 
 Simple app to track various covid-19 stats 
