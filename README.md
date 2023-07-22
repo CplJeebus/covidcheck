@@ -5,6 +5,7 @@ I think this is Karma for me dissing this CDC 🤔
 
 Will try and figure out a fix. 
 
+[*Boo*](https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide)
 
 # covidcheck
 
