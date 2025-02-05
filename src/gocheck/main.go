@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"gocheck/data"
 	"gocheck/output"
-	"gocheck/records"
+	. "gocheck/records"
 	"gocheck/types"
-	"io/ioutil"
+	"os"
 )
 
 const longUsage = `Usage of ./check-ecdc:
@@ -56,7 +56,7 @@ default - Creates a graph"`)
 
 	var theRecords types.CovidData
 
-	fbytes, e := ioutil.ReadFile("./data/today.json")
+	fbytes, e := os.ReadFile("./data/today.json")
 	if e != nil {
 		fmt.Printf("%s", e)
 	}
@@ -70,19 +70,19 @@ default - Creates a graph"`)
 	var title string
 	switch {
 	case *deaths:
-		ResultSet = records.GetRecords(*number, countries, theRecords, "deaths")
+		ResultSet = GetRecords(*number, countries, theRecords, "deaths")
 		title = "New Deaths per day"
 	case *cases:
-		ResultSet = records.GetRecords(*number, countries, theRecords, "cases")
+		ResultSet = GetRecords(*number, countries, theRecords, "cases")
 		title = "New Cases per day"
 	case *casespermillion:
-		ResultSet = records.GetRecords(*number, countries, theRecords, "casespermillion")
+		ResultSet = GetRecords(*number, countries, theRecords, "casespermillion")
 		title = "New Cases per million of pop per day"
 	case *deathspermillion:
-		ResultSet = records.GetRecords(*number, countries, theRecords, "deathspermillion")
+		ResultSet = GetRecords(*number, countries, theRecords, "deathspermillion")
 		title = "New Deaths per million of pop per day"
 	default:
-		ResultSet = records.GetRecords(*number, countries, theRecords, "c14d100k")
+		ResultSet = GetRecords(*number, countries, theRecords, "c14d100k")
 		title = "New Cases cumulative 14 day per 100K"
 	}
 
